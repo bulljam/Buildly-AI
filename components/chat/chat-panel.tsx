@@ -1,0 +1,78 @@
+import { Button } from "@/components/ui/button"
+
+const starterPrompts = [
+  "Create a clean landing page for a SaaS product.",
+  "Design a portfolio site for a freelance designer.",
+  "Build a coffee shop homepage with menu highlights.",
+]
+
+const placeholderMessages = [
+  {
+    id: "assistant-welcome",
+    role: "assistant",
+    content:
+      "Tell me what kind of website you want. I’ll generate a full HTML document and keep updating it as you refine the prompt.",
+  },
+  {
+    id: "assistant-tip",
+    role: "assistant",
+    content:
+      "For the MVP, we’ll keep the flow simple: prompt on the left, live preview on the right, and one current HTML snapshot per project.",
+  },
+]
+
+export function ChatPanel() {
+  return (
+    <section className="flex min-h-[420px] flex-col rounded-3xl border border-border/70 bg-card/80 shadow-sm">
+      <div className="border-b border-border/70 px-5 py-4">
+        <p className="text-sm font-medium">Chat</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Prompt history will be saved per project.
+        </p>
+      </div>
+
+      <div className="flex-1 space-y-4 px-5 py-5">
+        {placeholderMessages.map((message) => (
+          <article
+            key={message.id}
+            className="max-w-xl rounded-2xl border border-border/60 bg-background px-4 py-3 text-sm leading-6 shadow-xs"
+          >
+            <p className="mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+              {message.role}
+            </p>
+            <p>{message.content}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="space-y-4 border-t border-border/70 px-5 py-5">
+        <div className="rounded-2xl border border-dashed border-border bg-background/70 p-4">
+          <p className="text-sm font-medium">Starter prompts</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {starterPrompts.map((prompt) => (
+              <button
+                key={prompt}
+                type="button"
+                className="rounded-full border border-border bg-card px-3 py-1.5 text-left text-xs text-muted-foreground transition hover:border-foreground/20 hover:text-foreground"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-background shadow-xs">
+          <textarea
+            className="min-h-32 w-full resize-none bg-transparent px-4 py-3 text-sm outline-none placeholder:text-muted-foreground"
+            placeholder="Describe the website you want to build..."
+            disabled
+          />
+          <div className="flex items-center justify-between border-t border-border px-4 py-3">
+            <p className="text-xs text-muted-foreground">Generation flow comes next.</p>
+            <Button disabled>Generate</Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
