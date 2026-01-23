@@ -1,6 +1,10 @@
 import { DEFAULT_PROJECT_HTML } from "@/lib/db/default-html"
 
-export function PreviewPanel() {
+type PreviewPanelProps = {
+  html?: string
+}
+
+export function PreviewPanel({ html = DEFAULT_PROJECT_HTML }: PreviewPanelProps) {
   return (
     <section className="flex min-h-[420px] flex-col rounded-3xl border border-border/70 bg-card/80 shadow-sm">
       <div className="flex items-center justify-between border-b border-border/70 px-5 py-4">
@@ -19,7 +23,7 @@ export function PreviewPanel() {
         <div className="h-full min-h-[420px] overflow-hidden rounded-2xl border border-border bg-white shadow-inner">
           <iframe
             title="Buildly preview"
-            srcDoc={DEFAULT_PROJECT_HTML}
+            srcDoc={html}
             sandbox="allow-scripts"
             className="h-full min-h-[420px] w-full"
           />
