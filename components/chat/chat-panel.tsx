@@ -1,3 +1,5 @@
+import type { MessageRecord } from "@/lib/schemas/message"
+
 import { Button } from "@/components/ui/button"
 
 const starterPrompts = [
@@ -6,7 +8,7 @@ const starterPrompts = [
   "Build a coffee shop homepage with menu highlights.",
 ]
 
-const placeholderMessages = [
+const placeholderMessages: Array<Pick<MessageRecord, "id" | "role" | "content">> = [
   {
     id: "assistant-welcome",
     role: "assistant",
@@ -21,18 +23,26 @@ const placeholderMessages = [
   },
 ]
 
-export function ChatPanel() {
+type ChatPanelProps = {
+  messages?: MessageRecord[]
+  projectName?: string
+}
+
+export function ChatPanel({ messages = [], projectName }: ChatPanelProps) {
+  const hasMessages = messages.length > 0
+  const items = hasMessages ? messages : placeholderMessages
+
   return (
     <section className="flex min-h-[420px] flex-col rounded-3xl border border-border/70 bg-card/80 shadow-sm">
       <div className="border-b border-border/70 px-5 py-4">
         <p className="text-sm font-medium">Chat</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          Prompt history will be saved per project.
+          {projectName ? `Messages for ${projectName}.` : "Prompt history will be saved per project."}
         </p>
       </div>
 
       <div className="flex-1 space-y-4 px-5 py-5">
-        {placeholderMessages.map((message) => (
+        {items.map((message) => (
           <article
             key={message.id}
             className="max-w-xl rounded-2xl border border-border/60 bg-background px-4 py-3 text-sm leading-6 shadow-xs"
@@ -68,7 +78,9 @@ export function ChatPanel() {
             disabled
           />
           <div className="flex items-center justify-between border-t border-border px-4 py-3">
-            <p className="text-xs text-muted-foreground">Generation flow comes next.</p>
+            <p className="text-xs text-muted-foreground">
+              {hasMessages ? "Saved history loaded successfully." : "Generation flow comes next."}
+            </p>
             <Button disabled>Generate</Button>
           </div>
         </div>
