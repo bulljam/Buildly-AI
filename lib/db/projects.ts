@@ -1,6 +1,7 @@
 import { DEFAULT_PROJECT_HTML } from "@/lib/db/default-html"
 import { prisma } from "@/lib/db/prisma"
 import type { CreateProjectInput } from "@/lib/schemas/project"
+import type { MessageRole } from "@/lib/schemas/message"
 
 const DEFAULT_PROJECT_NAME = "Untitled Project"
 
@@ -89,4 +90,66 @@ export async function getProjectWithMessages(projectId: string) {
       },
     },
   })
+}
+
+export async function createProjectMessage(input: {
+  projectId: string
+  role: MessageRole
+  content: string
+}) {
+  return prisma.message.create({
+    data: {
+      projectId: input.projectId,
+      role: input.role,
+      content: input.content,
+    },
+    select: {
+      id: true,
+      projectId: true,
+      role: true,
+      content: true,
+      createdAt: true,
+    },
+  })
+}
+
+export async function saveGeneratedProjectResult(input: {
+  projectId: string
+  assistantContent: string
+  currentHtml: string
+}) {
+  const [assistantMessage, project] = await prisma.$transaction([
+    prisma.message.create({
+      data: {
+        projectId: input.projectId,
+        role: "assistant",
+        content: input.assistantContent,
+      },
+      select: {
+        id: true,
+        role: true,
+        content: true,
+        createdAt: true,
+      },
+    }),
+    prisma.project.update({
+      where: {
+        id: input.projectId,
+      },
+      data: {
+        currentHtml: input.currentHtml,
+      },
+      select: {
+        id: true,
+        name: true,
+        currentHtml: true,
+        updatedAt: true,
+      },
+    }),
+  ])
+
+  return {
+    assistantMessage,
+    project,
+  }
 }
