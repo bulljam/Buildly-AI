@@ -31,10 +31,10 @@ describe("POST /api/generate", () => {
       id: "user-message-1",
     })
     aiMock.generateHtmlWithOpenRouter.mockResolvedValueOnce(
-      "<!DOCTYPE html><html><body>New</body></html>",
+      "<!DOCTYPE html><html><body>New</body></html>"
     )
     extractMock.extractHtmlDocument.mockReturnValueOnce(
-      "<!DOCTYPE html><html><body>New</body></html>",
+      "<!DOCTYPE html><html><body>New</body></html>"
     )
     dbMock.saveGeneratedProjectResult.mockResolvedValueOnce({
       project: {
@@ -148,7 +148,9 @@ describe("POST /api/generate", () => {
     dbMock.createProjectMessage.mockResolvedValueOnce({
       id: "user-message-2",
     })
-    aiMock.generateHtmlWithOpenRouter.mockResolvedValueOnce("<div>fragment</div>")
+    aiMock.generateHtmlWithOpenRouter.mockResolvedValueOnce(
+      "<div>fragment</div>"
+    )
     extractMock.extractHtmlDocument.mockImplementationOnce(() => {
       throw new Error("AI returned malformed HTML.")
     })
@@ -182,7 +184,7 @@ describe("POST /api/generate", () => {
       id: "user-message-3",
     })
     aiMock.generateHtmlWithOpenRouter.mockRejectedValueOnce(
-      new Error("Missing OPENROUTER_API_KEY."),
+      new Error("Missing OPENROUTER_API_KEY.")
     )
 
     const request = new Request("http://localhost/api/generate", {

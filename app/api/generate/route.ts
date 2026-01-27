@@ -16,8 +16,10 @@ export async function POST(request: Request) {
 
     if (!result.success) {
       return NextResponse.json(
-        { error: result.error.issues[0]?.message ?? "Invalid generate payload." },
-        { status: 400 },
+        {
+          error: result.error.issues[0]?.message ?? "Invalid generate payload.",
+        },
+        { status: 400 }
       )
     }
 
@@ -48,7 +50,8 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Failed to generate project HTML", error)
 
-    const message = error instanceof Error ? error.message : "Generation failed."
+    const message =
+      error instanceof Error ? error.message : "Generation failed."
     const status =
       message === "AI returned malformed HTML."
         ? 502
@@ -65,7 +68,7 @@ export async function POST(request: Request) {
               ? "OpenRouter is not configured on the server."
               : "Unable to generate HTML right now.",
       },
-      { status },
+      { status }
     )
   }
 }

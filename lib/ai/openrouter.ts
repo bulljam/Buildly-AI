@@ -36,7 +36,9 @@ export async function generateHtmlWithOpenRouter(options: {
     }),
   })
 
-  const json = (await response.json().catch(() => null)) as OpenRouterResponse | null
+  const json = (await response
+    .json()
+    .catch(() => null)) as OpenRouterResponse | null
 
   if (!response.ok) {
     const message = json?.error?.message || "OpenRouter request failed."
