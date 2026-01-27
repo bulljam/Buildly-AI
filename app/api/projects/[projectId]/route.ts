@@ -24,7 +24,7 @@ export async function GET(_: Request, context: RouteContext) {
 
     return NextResponse.json(
       { error: "Unable to load this project right now." },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

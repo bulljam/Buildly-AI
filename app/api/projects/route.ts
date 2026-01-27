@@ -13,7 +13,7 @@ export async function GET() {
 
     return NextResponse.json(
       { error: "Unable to load projects right now." },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -25,8 +25,10 @@ export async function POST(request: Request) {
 
     if (!result.success) {
       return NextResponse.json(
-        { error: result.error.issues[0]?.message ?? "Invalid project payload." },
-        { status: 400 },
+        {
+          error: result.error.issues[0]?.message ?? "Invalid project payload.",
+        },
+        { status: 400 }
       )
     }
 
@@ -38,7 +40,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       { error: "Unable to create a project right now." },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
