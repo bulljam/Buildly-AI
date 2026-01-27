@@ -1,9 +1,7 @@
 import { notFound } from "next/navigation"
 
-import { ChatPanel } from "@/components/chat/chat-panel"
+import { ProjectBuilder } from "@/components/builder/project-builder"
 import { AppHeader } from "@/components/layout/app-header"
-import { AppShell } from "@/components/layout/app-shell"
-import { PreviewPanel } from "@/components/preview/preview-panel"
 import { getProjectWithMessages } from "@/lib/db/projects"
 
 export const dynamic = "force-dynamic"
@@ -25,14 +23,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <div className="flex min-h-svh flex-col bg-background">
       <AppHeader />
-      <AppShell
-        eyebrow="Saved project"
-        title={project.name}
-        description="This project loads from Prisma with its latest HTML snapshot and saved chat history. Generation wiring comes next."
-        chatPanel={
-          <ChatPanel projectName={project.name} messages={project.messages} />
-        }
-        previewPanel={<PreviewPanel html={project.currentHtml} />}
+      <ProjectBuilder
+        initialHtml={project.currentHtml}
+        initialMessages={project.messages}
+        projectId={project.id}
+        projectName={project.name}
       />
     </div>
   )
