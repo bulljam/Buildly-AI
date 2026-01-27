@@ -17,7 +17,7 @@ describe("extractHtmlDocument", () => {
     ].join("\n")
 
     expect(extractHtmlDocument(response)).toBe(
-      "<!DOCTYPE html><html><body><h1>Hello</h1></body></html>",
+      "<!DOCTYPE html><html><body><h1>Hello</h1></body></html>"
     )
   })
 
@@ -29,13 +29,13 @@ describe("extractHtmlDocument", () => {
     ].join("\n")
 
     expect(extractHtmlDocument(response)).toBe(
-      "<!DOCTYPE html><html><body><h1>Hello</h1></body></html>",
+      "<!DOCTYPE html><html><body><h1>Hello</h1></body></html>"
     )
   })
 
   it("throws when the response is not a complete html document", () => {
     expect(() => extractHtmlDocument("<div>Only a fragment</div>")).toThrow(
-      "AI returned malformed HTML.",
+      "AI returned malformed HTML."
     )
   })
 })

@@ -40,7 +40,7 @@ describe("createProjectSchema", () => {
 
     if (!result.success) {
       expect(result.error.issues[0]?.message).toBe(
-        "Project name must be 80 characters or less.",
+        "Project name must be 80 characters or less."
       )
     }
   })
