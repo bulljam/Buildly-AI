@@ -2,10 +2,12 @@ import { DEFAULT_PROJECT_HTML } from "@/lib/db/default-html"
 
 type PreviewPanelProps = {
   html?: string
+  isLoading?: boolean
 }
 
 export function PreviewPanel({
   html = DEFAULT_PROJECT_HTML,
+  isLoading = false,
 }: PreviewPanelProps) {
   return (
     <section className="flex min-h-[420px] flex-col rounded-3xl border border-border/70 bg-card/80 shadow-sm">
@@ -17,7 +19,7 @@ export function PreviewPanel({
           </p>
         </div>
         <div className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground">
-          Preview mode
+          {isLoading ? "Last valid preview" : "Preview mode"}
         </div>
       </div>
 

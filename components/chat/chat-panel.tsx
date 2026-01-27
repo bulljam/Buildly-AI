@@ -1,6 +1,9 @@
+"use client"
+
 import type { MessageRecord } from "@/lib/schemas/message"
 
 import { Button } from "@/components/ui/button"
+import { canSubmitPrompt } from "@/lib/builder/generate-state"
 
 const starterPrompts = [
   "Create a clean landing page for a SaaS product.",
@@ -26,13 +29,29 @@ const placeholderMessages: Array<
 ]
 
 type ChatPanelProps = {
+  error?: string | null
+  inputValue?: string
+  isLoading?: boolean
   messages?: MessageRecord[]
+  onInputChange?: (value: string) => void
+  onStarterPrompt?: (prompt: string) => void
+  onSubmit?: (prompt: string) => void
   projectName?: string
 }
 
-export function ChatPanel({ messages = [], projectName }: ChatPanelProps) {
+export function ChatPanel({
+  error,
+  inputValue = "",
+  isLoading = false,
+  messages = [],
+  onInputChange,
+  onStarterPrompt,
+  onSubmit,
+  projectName,
+}: ChatPanelProps) {
   const hasMessages = messages.length > 0
   const items = hasMessages ? messages : placeholderMessages
+  const submitEnabled = canSubmitPrompt(inputValue, isLoading)
 
   return (
     <section className="flex min-h-[420px] flex-col rounded-3xl border border-border/70 bg-card/80 shadow-sm">
@@ -67,6 +86,8 @@ export function ChatPanel({ messages = [], projectName }: ChatPanelProps) {
               <button
                 key={prompt}
                 type="button"
+                disabled={isLoading}
+                onClick={() => onStarterPrompt?.(prompt)}
                 className="rounded-full border border-border bg-card px-3 py-1.5 text-left text-xs text-muted-foreground transition hover:border-foreground/20 hover:text-foreground"
               >
                 {prompt}
@@ -75,20 +96,44 @@ export function ChatPanel({ messages = [], projectName }: ChatPanelProps) {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-background shadow-xs">
-          <textarea
-            className="min-h-32 w-full resize-none bg-transparent px-4 py-3 text-sm outline-none placeholder:text-muted-foreground"
-            placeholder="Describe the website you want to build..."
-            disabled
-          />
-          <div className="flex items-center justify-between border-t border-border px-4 py-3">
-            <p className="text-xs text-muted-foreground">
-              {hasMessages
-                ? "Saved history loaded successfully."
-                : "Generation flow comes next."}
-            </p>
-            <Button disabled>Generate</Button>
+        {error ? (
+          <div className="rounded-2xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+            {error}
           </div>
+        ) : null}
+
+        <div className="rounded-2xl border border-border bg-background shadow-xs">
+          <form
+            onSubmit={(event) => {
+              event.preventDefault()
+
+              if (!submitEnabled) {
+                return
+              }
+
+              onSubmit?.(inputValue)
+            }}
+          >
+            <textarea
+              className="min-h-32 w-full resize-none bg-transparent px-4 py-3 text-sm outline-none placeholder:text-muted-foreground"
+              placeholder="Describe the website you want to build..."
+              disabled={isLoading}
+              value={inputValue}
+              onChange={(event) => onInputChange?.(event.target.value)}
+            />
+            <div className="flex items-center justify-between border-t border-border px-4 py-3">
+              <p className="text-xs text-muted-foreground">
+                {isLoading
+                  ? "Generating and saving the new HTML snapshot..."
+                  : hasMessages
+                    ? "Saved history loaded successfully."
+                    : "Start with a prompt or use one of the examples above."}
+              </p>
+              <Button disabled={!submitEnabled}>
+                {isLoading ? "Generating..." : "Generate"}
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </section>
