@@ -29,7 +29,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         eyebrow="Saved project"
         title={project.name}
         description="This project loads from Prisma with its latest HTML snapshot and saved chat history. Generation wiring comes next."
-        chatPanel={<ChatPanel projectName={project.name} messages={project.messages} />}
+        chatPanel={
+          <ChatPanel projectName={project.name} messages={project.messages} />
+        }
         previewPanel={<PreviewPanel html={project.currentHtml} />}
       />
     </div>

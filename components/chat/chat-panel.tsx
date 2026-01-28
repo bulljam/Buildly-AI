@@ -8,7 +8,9 @@ const starterPrompts = [
   "Build a coffee shop homepage with menu highlights.",
 ]
 
-const placeholderMessages: Array<Pick<MessageRecord, "id" | "role" | "content">> = [
+const placeholderMessages: Array<
+  Pick<MessageRecord, "id" | "role" | "content">
+> = [
   {
     id: "assistant-welcome",
     role: "assistant",
@@ -37,7 +39,9 @@ export function ChatPanel({ messages = [], projectName }: ChatPanelProps) {
       <div className="border-b border-border/70 px-5 py-4">
         <p className="text-sm font-medium">Chat</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          {projectName ? `Messages for ${projectName}.` : "Prompt history will be saved per project."}
+          {projectName
+            ? `Messages for ${projectName}.`
+            : "Prompt history will be saved per project."}
         </p>
       </div>
 
@@ -47,7 +51,7 @@ export function ChatPanel({ messages = [], projectName }: ChatPanelProps) {
             key={message.id}
             className="max-w-xl rounded-2xl border border-border/60 bg-background px-4 py-3 text-sm leading-6 shadow-xs"
           >
-            <p className="mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="mb-2 text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
               {message.role}
             </p>
             <p>{message.content}</p>
@@ -79,7 +83,9 @@ export function ChatPanel({ messages = [], projectName }: ChatPanelProps) {
           />
           <div className="flex items-center justify-between border-t border-border px-4 py-3">
             <p className="text-xs text-muted-foreground">
-              {hasMessages ? "Saved history loaded successfully." : "Generation flow comes next."}
+              {hasMessages
+                ? "Saved history loaded successfully."
+                : "Generation flow comes next."}
             </p>
             <Button disabled>Generate</Button>
           </div>

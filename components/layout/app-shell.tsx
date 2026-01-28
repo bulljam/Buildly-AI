@@ -20,11 +20,15 @@ export function AppShell({
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
       <section className="rounded-3xl border border-border/70 bg-gradient-to-br from-background via-background to-muted/60 p-6 shadow-sm">
         <div className="max-w-3xl space-y-3">
-          <p className="text-xs font-medium uppercase tracking-[0.24em] text-muted-foreground">
+          <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
             {eyebrow}
           </p>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
-          <p className="text-sm leading-7 text-muted-foreground sm:text-base">{description}</p>
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            {title}
+          </h2>
+          <p className="text-sm leading-7 text-muted-foreground sm:text-base">
+            {description}
+          </p>
         </div>
       </section>
 
