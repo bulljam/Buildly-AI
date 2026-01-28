@@ -63,7 +63,9 @@ describe("GET /api/projects/[projectId]/messages", () => {
       id: "project-2",
       name: "Portfolio",
     })
-    projectsDbMock.getProjectMessages.mockRejectedValueOnce(new Error("db failed"))
+    projectsDbMock.getProjectMessages.mockRejectedValueOnce(
+      new Error("db failed")
+    )
 
     const response = await GET(new Request("http://localhost"), {
       params: Promise.resolve({ projectId: "project-2" }),

@@ -127,7 +127,9 @@ describe("POST /api/projects", () => {
   })
 
   it("returns a 500 response when project creation fails", async () => {
-    projectsDbMock.createProject.mockRejectedValueOnce(new Error("insert failed"))
+    projectsDbMock.createProject.mockRejectedValueOnce(
+      new Error("insert failed")
+    )
 
     const request = new Request("http://localhost/api/projects", {
       method: "POST",
