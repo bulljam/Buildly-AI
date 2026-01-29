@@ -10,7 +10,8 @@ export function ProjectList({ projects }: ProjectListProps) {
   if (projects.length === 0) {
     return (
       <div className="rounded-3xl border border-dashed border-border bg-card/60 p-8 text-sm text-muted-foreground">
-        No projects yet. Create your first one to start generating and refining a website.
+        No projects yet. Create your first one to start generating and refining
+        a website.
       </div>
     )
   }

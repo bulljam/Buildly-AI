@@ -4,7 +4,9 @@ type PreviewPanelProps = {
   html?: string
 }
 
-export function PreviewPanel({ html = DEFAULT_PROJECT_HTML }: PreviewPanelProps) {
+export function PreviewPanel({
+  html = DEFAULT_PROJECT_HTML,
+}: PreviewPanelProps) {
   return (
     <section className="flex min-h-[420px] flex-col rounded-3xl border border-border/70 bg-card/80 shadow-sm">
       <div className="flex items-center justify-between border-b border-border/70 px-5 py-4">
