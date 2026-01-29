@@ -1,11 +1,13 @@
 import { DEFAULT_PROJECT_HTML } from "@/lib/db/default-html"
-import { prisma } from "@/lib/db/prisma"
+import { assertDatabaseConfigured, prisma } from "@/lib/db/prisma"
 import type { CreateProjectInput } from "@/lib/schemas/project"
 import type { MessageRole } from "@/lib/schemas/message"
 
 const DEFAULT_PROJECT_NAME = "Untitled Project"
 
 export async function listProjects() {
+  assertDatabaseConfigured()
+
   return prisma.project.findMany({
     orderBy: {
       updatedAt: "desc",
@@ -21,6 +23,8 @@ export async function listProjects() {
 }
 
 export async function createProject(input?: CreateProjectInput) {
+  assertDatabaseConfigured()
+
   const name = input?.name?.trim() || DEFAULT_PROJECT_NAME
 
   return prisma.project.create({
@@ -39,6 +43,8 @@ export async function createProject(input?: CreateProjectInput) {
 }
 
 export async function getProjectById(projectId: string) {
+  assertDatabaseConfigured()
+
   return prisma.project.findUnique({
     where: { id: projectId },
     select: {
@@ -52,6 +58,8 @@ export async function getProjectById(projectId: string) {
 }
 
 export async function getProjectMessages(projectId: string) {
+  assertDatabaseConfigured()
+
   return prisma.message.findMany({
     where: { projectId },
     orderBy: {
@@ -68,6 +76,8 @@ export async function getProjectMessages(projectId: string) {
 }
 
 export async function getProjectWithMessages(projectId: string) {
+  assertDatabaseConfigured()
+
   return prisma.project.findUnique({
     where: { id: projectId },
     select: {
@@ -97,6 +107,8 @@ export async function createProjectMessage(input: {
   role: MessageRole
   content: string
 }) {
+  assertDatabaseConfigured()
+
   return prisma.message.create({
     data: {
       projectId: input.projectId,
@@ -118,6 +130,8 @@ export async function saveGeneratedProjectResult(input: {
   assistantContent: string
   currentHtml: string
 }) {
+  assertDatabaseConfigured()
+
   const [assistantMessage, project] = await prisma.$transaction([
     prisma.message.create({
       data: {

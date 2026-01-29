@@ -16,6 +16,7 @@ const { prismaMock } = vi.hoisted(() => ({
 }))
 
 vi.mock("@/lib/db/prisma", () => ({
+  assertDatabaseConfigured: vi.fn(),
   prisma: prismaMock,
 }))
 
