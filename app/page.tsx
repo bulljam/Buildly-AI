@@ -4,6 +4,7 @@ import { AppHeader } from "@/components/layout/app-header"
 import { NewProjectButton } from "@/components/projects/new-project-button"
 import { ProjectList } from "@/components/projects/project-list"
 import { createProject, listProjects } from "@/lib/db/projects"
+import { DATABASE_URL_MISSING_ERROR, isDatabaseConfigured } from "@/lib/db/prisma"
 import type { ProjectRecord } from "@/types/project"
 
 export const dynamic = "force-dynamic"
@@ -11,13 +12,21 @@ export const dynamic = "force-dynamic"
 export default async function Page() {
   let projects: ProjectRecord[] = []
   let loadError: string | null = null
+  const databaseConfigured = isDatabaseConfigured()
 
-  try {
-    projects = await listProjects()
-  } catch (error) {
-    console.error("Failed to load homepage projects", error)
+  if (!databaseConfigured) {
     loadError =
-      "The database is not ready yet. Once Prisma is set up locally, your projects will appear here."
+      "DATABASE_URL is missing. Add it to your local .env file and run Prisma setup before creating projects."
+  } else {
+    try {
+      projects = await listProjects()
+    } catch (error) {
+      console.error("Failed to load homepage projects", error)
+      loadError =
+        error instanceof Error && error.message === DATABASE_URL_MISSING_ERROR
+          ? "DATABASE_URL is missing. Add it to your local .env file and run Prisma setup before creating projects."
+          : "The database is not ready yet. Once Prisma is set up locally, your projects will appear here."
+    }
   }
 
   async function createProjectAction() {
@@ -45,7 +54,10 @@ export default async function Page() {
             </p>
           </div>
           <div>
-            <NewProjectButton action={createProjectAction} />
+            <NewProjectButton
+              action={createProjectAction}
+              disabled={!databaseConfigured}
+            />
           </div>
         </section>
 
