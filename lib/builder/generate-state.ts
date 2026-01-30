@@ -25,7 +25,7 @@ export function createOptimisticUserMessage(input: {
 
 export function appendAssistantMessage(
   messages: MessageRecord[],
-  assistantMessage: MessageRecord,
+  assistantMessage: MessageRecord
 ) {
   return [...messages, assistantMessage]
 }

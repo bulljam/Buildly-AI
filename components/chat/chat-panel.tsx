@@ -1,8 +1,12 @@
 "use client"
 
+import { useEffect, useRef } from "react"
+
 import type { MessageRecord } from "@/lib/schemas/message"
 
+import { ChatMessageList } from "@/components/chat/chat-message-list"
 import { Button } from "@/components/ui/button"
+import { shouldSubmitPromptOnKeyDown } from "@/lib/builder/chat-ux"
 import { canSubmitPrompt } from "@/lib/builder/generate-state"
 
 const starterPrompts = [
@@ -11,20 +15,24 @@ const starterPrompts = [
   "Build a coffee shop homepage with menu highlights.",
 ]
 
+const placeholderTimestamp = new Date("2026-03-26T09:00:00.000Z")
+
 const placeholderMessages: Array<
-  Pick<MessageRecord, "id" | "role" | "content">
+  Pick<MessageRecord, "id" | "role" | "content" | "createdAt">
 > = [
   {
     id: "assistant-welcome",
     role: "assistant",
     content:
       "Tell me what kind of website you want. I’ll generate a full HTML document and keep updating it as you refine the prompt.",
+    createdAt: placeholderTimestamp,
   },
   {
     id: "assistant-tip",
     role: "assistant",
     content:
       "For the MVP, we’ll keep the flow simple: prompt on the left, live preview on the right, and one current HTML snapshot per project.",
+    createdAt: placeholderTimestamp,
   },
 ]
 
@@ -52,6 +60,15 @@ export function ChatPanel({
   const hasMessages = messages.length > 0
   const items = hasMessages ? messages : placeholderMessages
   const submitEnabled = canSubmitPrompt(inputValue, isLoading)
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
+  const latestMessageCount = items.length
+
+  useEffect(() => {
+    scrollContainerRef.current?.scrollTo({
+      top: scrollContainerRef.current.scrollHeight,
+      behavior: "smooth",
+    })
+  }, [latestMessageCount])
 
   return (
     <section className="flex min-h-[420px] flex-col rounded-3xl border border-border/70 bg-card/80 shadow-sm">
@@ -64,18 +81,11 @@ export function ChatPanel({
         </p>
       </div>
 
-      <div className="flex-1 space-y-4 px-5 py-5">
-        {items.map((message) => (
-          <article
-            key={message.id}
-            className="max-w-xl rounded-2xl border border-border/60 bg-background px-4 py-3 text-sm leading-6 shadow-xs"
-          >
-            <p className="mb-2 text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
-              {message.role}
-            </p>
-            <p>{message.content}</p>
-          </article>
-        ))}
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto px-5 py-5"
+      >
+        <ChatMessageList messages={items} />
       </div>
 
       <div className="space-y-4 border-t border-border/70 px-5 py-5">
@@ -120,6 +130,19 @@ export function ChatPanel({
               disabled={isLoading}
               value={inputValue}
               onChange={(event) => onInputChange?.(event.target.value)}
+              onKeyDown={(event) => {
+                if (
+                  shouldSubmitPromptOnKeyDown({
+                    enterKey: event.key === "Enter",
+                    shiftKey: event.shiftKey,
+                    isComposing: event.nativeEvent.isComposing,
+                  }) &&
+                  submitEnabled
+                ) {
+                  event.preventDefault()
+                  onSubmit?.(inputValue)
+                }
+              }}
             />
             <div className="flex items-center justify-between border-t border-border px-4 py-3">
               <p className="text-xs text-muted-foreground">
