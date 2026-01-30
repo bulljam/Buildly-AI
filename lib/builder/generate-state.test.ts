@@ -9,7 +9,9 @@ import {
 
 describe("generate-state helpers", () => {
   it("normalizes prompt text before submission", () => {
-    expect(normalizePrompt("  Build a landing page  ")).toBe("Build a landing page")
+    expect(normalizePrompt("  Build a landing page  ")).toBe(
+      "Build a landing page"
+    )
   })
 
   it("allows submission for a non-empty prompt when not loading", () => {
@@ -33,7 +35,7 @@ describe("generate-state helpers", () => {
         projectId: "project-1",
         prompt: "  Add a hero section  ",
         createdAt,
-      }),
+      })
     ).toEqual({
       id: "temp-1",
       projectId: "project-1",
