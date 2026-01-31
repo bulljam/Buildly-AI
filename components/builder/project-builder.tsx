@@ -141,7 +141,11 @@ export function ProjectBuilder({
           onSubmit={submitPrompt}
           projectName={projectName}
         />
-        <PreviewPanel html={html} isLoading={isLoading} />
+        <PreviewPanel
+          html={html}
+          isLoading={isLoading}
+          projectName={projectName}
+        />
       </section>
     </main>
   )
