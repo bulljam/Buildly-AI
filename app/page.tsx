@@ -4,7 +4,10 @@ import { AppHeader } from "@/components/layout/app-header"
 import { NewProjectButton } from "@/components/projects/new-project-button"
 import { ProjectList } from "@/components/projects/project-list"
 import { createProject, listProjects } from "@/lib/db/projects"
-import { DATABASE_URL_MISSING_ERROR, isDatabaseConfigured } from "@/lib/db/prisma"
+import {
+  DATABASE_URL_MISSING_ERROR,
+  isDatabaseConfigured,
+} from "@/lib/db/prisma"
 import type { ProjectRecord } from "@/types/project"
 
 export const dynamic = "force-dynamic"

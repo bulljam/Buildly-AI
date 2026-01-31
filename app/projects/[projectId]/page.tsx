@@ -22,8 +22,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <AppHeader />
         <main className="mx-auto flex w-full max-w-4xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
           <div className="w-full rounded-3xl border border-destructive/30 bg-destructive/5 p-6 text-sm text-destructive">
-            DATABASE_URL is missing. Add it to your local <code>.env</code> file, run Prisma
-            setup, and then reload this project.
+            DATABASE_URL is missing. Add it to your local <code>.env</code>{" "}
+            file, run Prisma setup, and then reload this project.
           </div>
         </main>
       </div>
