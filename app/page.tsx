@@ -4,10 +4,11 @@ import { AppHeader } from "@/components/layout/app-header"
 import { NewProjectButton } from "@/components/projects/new-project-button"
 import { ProjectList } from "@/components/projects/project-list"
 import { createProject, listProjects } from "@/lib/db/projects"
+import { isDatabaseConfigured } from "@/lib/db/prisma"
 import {
-  DATABASE_URL_MISSING_ERROR,
-  isDatabaseConfigured,
-} from "@/lib/db/prisma"
+  DATABASE_SETUP_MESSAGE,
+  getDatabaseSetupErrorMessage,
+} from "@/lib/db/setup-status"
 import type { ProjectRecord } from "@/types/project"
 
 export const dynamic = "force-dynamic"
@@ -18,17 +19,13 @@ export default async function Page() {
   const databaseConfigured = isDatabaseConfigured()
 
   if (!databaseConfigured) {
-    loadError =
-      "DATABASE_URL is missing. Add it to your local .env file and run Prisma setup before creating projects."
+    loadError = DATABASE_SETUP_MESSAGE
   } else {
     try {
       projects = await listProjects()
     } catch (error) {
       console.error("Failed to load homepage projects", error)
-      loadError =
-        error instanceof Error && error.message === DATABASE_URL_MISSING_ERROR
-          ? "DATABASE_URL is missing. Add it to your local .env file and run Prisma setup before creating projects."
-          : "The database is not ready yet. Once Prisma is set up locally, your projects will appear here."
+      loadError = getDatabaseSetupErrorMessage(error)
     }
   }
 
