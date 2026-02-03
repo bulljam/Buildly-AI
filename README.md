@@ -30,6 +30,8 @@ Create a local `.env` file with:
 
 ```env
 OPENROUTER_API_KEY=
+OPENROUTER_URL="https://openrouter.ai/api/v1/chat/completions"
+OPENROUTER_MODEL="openai/gpt-4o-mini"
 DATABASE_URL="file:./dev.db"
 ```
 
