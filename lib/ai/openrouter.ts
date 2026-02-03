@@ -1,7 +1,5 @@
+import { getOpenRouterConfig } from "@/lib/ai/openrouter-config"
 import { buildWebsiteGenerationPrompt } from "@/lib/ai/prompts"
-
-const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-const DEFAULT_MODEL = "openai/gpt-4o-mini"
 
 type OpenRouterResponse = {
   choices?: Array<{
@@ -18,20 +16,18 @@ export async function generateHtmlWithOpenRouter(options: {
   currentHtml: string
   prompt: string
 }) {
-  const apiKey = process.env.OPENROUTER_API_KEY
+  const { apiKey, appName, appUrl, model, url } = getOpenRouterConfig()
 
-  if (!apiKey) {
-    throw new Error("Missing OPENROUTER_API_KEY.")
-  }
-
-  const response = await fetch(OPENROUTER_URL, {
+  const response = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
+      ...(appUrl ? { "HTTP-Referer": appUrl } : {}),
+      "X-Title": appName,
     },
     body: JSON.stringify({
-      model: DEFAULT_MODEL,
+      model,
       messages: buildWebsiteGenerationPrompt(options),
     }),
   })
