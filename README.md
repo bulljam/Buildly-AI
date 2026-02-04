@@ -31,7 +31,7 @@ Create a local `.env` file with:
 ```env
 OPENROUTER_API_KEY=
 OPENROUTER_URL="https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_MODEL="openai/gpt-4o-mini"
+OPENROUTER_MODEL="qwen/qwen3-coder:free"
 DATABASE_URL="file:./dev.db"
 ```
 
