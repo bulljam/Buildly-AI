@@ -17,7 +17,7 @@ describe("getOpenRouterConfig", () => {
     expect(getOpenRouterConfig()).toMatchObject({
       apiKey: "test-key",
       appName: "Buildly AI",
-      model: "openai/gpt-4o-mini",
+      model: "qwen/qwen3-coder:free",
       url: "https://openrouter.ai/api/v1/chat/completions",
     })
   })

@@ -1,4 +1,4 @@
-const DEFAULT_OPENROUTER_MODEL = "openai/gpt-4o-mini"
+const DEFAULT_OPENROUTER_MODEL = "qwen/qwen3-coder:free"
 const DEFAULT_APP_NAME = "Buildly AI"
 
 export function getOpenRouterConfig() {
