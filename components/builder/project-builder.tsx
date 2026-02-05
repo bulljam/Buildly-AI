@@ -123,7 +123,7 @@ export function ProjectBuilder({
         <div className="truncate text-sm text-muted-foreground">{projectName}</div>
       </div>
 
-      <section className="grid flex-1 gap-4 lg:grid-cols-[360px_minmax(0,1fr)] xl:grid-cols-[380px_minmax(0,1fr)]">
+      <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[360px_minmax(0,1fr)] xl:grid-cols-[380px_minmax(0,1fr)]">
         <ChatPanel
           error={error}
           inputValue={inputValue}
