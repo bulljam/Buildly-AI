@@ -1,10 +1,12 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
 import { nanoid } from "nanoid"
 
 import { ChatPanel } from "@/components/chat/chat-panel"
 import { PreviewPanel } from "@/components/preview/preview-panel"
+import { Button } from "@/components/ui/button"
 import {
   appendAssistantMessage,
   canSubmitPrompt,
@@ -113,24 +115,15 @@ export function ProjectBuilder({
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
-      <section className="rounded-3xl border border-border/70 bg-gradient-to-br from-background via-background to-muted/60 p-6 shadow-sm">
-        <div className="max-w-3xl space-y-3">
-          <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
-            Saved project
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            {projectName}
-          </h1>
-          <p className="text-sm leading-7 text-muted-foreground sm:text-base">
-            Prompt the model to refine this site. The chat history stays
-            attached to this project, and the preview only updates when a new
-            valid HTML document is returned.
-          </p>
-        </div>
-      </section>
+    <main className="mx-auto flex w-full max-w-[1680px] flex-1 flex-col px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <Button asChild variant="outline" size="sm" className="rounded-full px-4">
+          <Link href="/">Back to projects</Link>
+        </Button>
+        <div className="truncate text-sm text-muted-foreground">{projectName}</div>
+      </div>
 
-      <section className="grid gap-6 lg:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)]">
+      <section className="grid flex-1 gap-4 lg:grid-cols-[360px_minmax(0,1fr)] xl:grid-cols-[380px_minmax(0,1fr)]">
         <ChatPanel
           error={error}
           inputValue={inputValue}

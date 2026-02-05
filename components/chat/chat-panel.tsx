@@ -71,26 +71,28 @@ export function ChatPanel({
   }, [latestMessageCount])
 
   return (
-    <section className="flex min-h-[420px] flex-col rounded-3xl border border-border/70 bg-card/80 shadow-sm">
-      <div className="border-b border-border/70 px-5 py-4">
-        <p className="text-sm font-medium">Chat</p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {projectName
-            ? `Messages for ${projectName}.`
-            : "Prompt history will be saved per project."}
+    <section className="flex min-h-[520px] flex-col overflow-hidden rounded-[2rem] border border-border/70 bg-card/90 shadow-sm lg:h-[calc(100svh-6.5rem)]">
+      <div className="border-b border-border/70 bg-background/70 px-5 py-4 backdrop-blur">
+        <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+          Chat
+        </p>
+        <p className="mt-2 truncate text-base font-semibold tracking-tight">
+          {projectName || "Current project"}
         </p>
       </div>
 
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto px-5 py-5"
+        className="flex-1 overflow-y-auto bg-gradient-to-b from-background/20 to-transparent px-4 py-4"
       >
         <ChatMessageList messages={items} />
       </div>
 
-      <div className="space-y-4 border-t border-border/70 px-5 py-5">
-        <div className="rounded-2xl border border-dashed border-border bg-background/70 p-4">
-          <p className="text-sm font-medium">Starter prompts</p>
+      <div className="space-y-3 border-t border-border/70 bg-background/80 px-4 py-4 backdrop-blur">
+        <div className="rounded-2xl border border-dashed border-border/80 bg-background/80 p-3">
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            Starter prompts
+          </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {starterPrompts.map((prompt) => (
               <button
@@ -98,7 +100,7 @@ export function ChatPanel({
                 type="button"
                 disabled={isLoading}
                 onClick={() => onStarterPrompt?.(prompt)}
-                className="rounded-full border border-border bg-card px-3 py-1.5 text-left text-xs text-muted-foreground transition hover:border-foreground/20 hover:text-foreground"
+                className="rounded-full border border-border bg-card px-3 py-1.5 text-left text-[11px] text-muted-foreground transition hover:border-foreground/20 hover:text-foreground"
               >
                 {prompt}
               </button>
@@ -112,7 +114,7 @@ export function ChatPanel({
           </div>
         ) : null}
 
-        <div className="rounded-2xl border border-border bg-background shadow-xs">
+        <div className="rounded-[1.5rem] border border-border bg-background shadow-xs">
           <form
             onSubmit={(event) => {
               event.preventDefault()
@@ -125,7 +127,7 @@ export function ChatPanel({
             }}
           >
             <textarea
-              className="min-h-32 w-full resize-none bg-transparent px-4 py-3 text-sm outline-none placeholder:text-muted-foreground"
+              className="min-h-36 w-full resize-none bg-transparent px-4 py-3 text-sm leading-6 outline-none placeholder:text-muted-foreground"
               placeholder="Describe the website you want to build..."
               disabled={isLoading}
               value={inputValue}
@@ -144,15 +146,15 @@ export function ChatPanel({
                 }
               }}
             />
-            <div className="flex items-center justify-between border-t border-border px-4 py-3">
-              <p className="text-xs text-muted-foreground">
+            <div className="flex items-center justify-between gap-3 border-t border-border px-4 py-3">
+              <p className="text-[11px] leading-5 text-muted-foreground">
                 {isLoading
                   ? "Generating and saving the new HTML snapshot..."
                   : hasMessages
                     ? "Saved history loaded successfully."
                     : "Start with a prompt or use one of the examples above."}
               </p>
-              <Button disabled={!submitEnabled}>
+              <Button disabled={!submitEnabled} className="rounded-full px-4">
                 {isLoading ? "Generating..." : "Generate"}
               </Button>
             </div>

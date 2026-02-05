@@ -37,12 +37,14 @@ export function PreviewPanel({
   }
 
   return (
-    <section className="flex min-h-[420px] flex-col rounded-3xl border border-border/70 bg-card/80 shadow-sm">
-      <div className="flex items-center justify-between border-b border-border/70 px-5 py-4">
+    <section className="flex min-h-[520px] flex-col overflow-hidden rounded-[2rem] border border-border/70 bg-card/90 shadow-sm lg:h-[calc(100svh-6.5rem)]">
+      <div className="flex items-center justify-between border-b border-border/70 bg-background/70 px-5 py-4 backdrop-blur">
         <div>
-          <p className="text-sm font-medium">Preview</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Generated sites render in a sandboxed iframe.
+          <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+            Preview
+          </p>
+          <p className="mt-2 text-base font-semibold tracking-tight">
+            {projectName}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -73,18 +75,28 @@ export function PreviewPanel({
         </div>
       </div>
 
-      <div className="flex-1 p-4">
+      <div className="flex-1 bg-gradient-to-br from-background/10 via-transparent to-muted/20 p-4">
         {mode === "preview" ? (
-          <div className="h-full min-h-[420px] overflow-hidden rounded-2xl border border-border bg-white shadow-inner">
-            <iframe
-              title="Buildly preview"
-              srcDoc={html}
-              sandbox="allow-scripts"
-              className="h-full min-h-[420px] w-full"
-            />
+          <div className="flex h-full min-h-[420px] items-start justify-center overflow-auto rounded-[1.75rem] border border-border bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(244,244,245,0.92))] p-4 shadow-inner sm:p-6">
+            <div className="w-full max-w-[1440px] overflow-hidden rounded-[1.4rem] border border-black/5 bg-white shadow-[0_24px_90px_rgba(15,23,42,0.12)]">
+              <div className="flex items-center gap-2 border-b border-border/70 bg-zinc-50 px-4 py-3">
+                <span className="size-2.5 rounded-full bg-rose-300" />
+                <span className="size-2.5 rounded-full bg-amber-300" />
+                <span className="size-2.5 rounded-full bg-emerald-300" />
+                <div className="ml-2 rounded-full border border-border bg-white px-3 py-1 text-[11px] text-muted-foreground">
+                  Live preview
+                </div>
+              </div>
+              <iframe
+                title="Buildly preview"
+                srcDoc={html}
+                sandbox="allow-scripts"
+                className="h-[calc(100svh-13rem)] min-h-[620px] w-full bg-white"
+              />
+            </div>
           </div>
         ) : (
-          <div className="min-h-[420px] overflow-hidden rounded-2xl border border-border bg-zinc-950 shadow-inner">
+          <div className="min-h-[420px] overflow-hidden rounded-[1.75rem] border border-border bg-zinc-950 shadow-inner">
             <div className="border-b border-white/10 px-4 py-3 text-xs text-zinc-400">
               {isLoading
                 ? "Showing the last saved valid HTML snapshot."
