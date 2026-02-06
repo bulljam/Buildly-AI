@@ -127,7 +127,7 @@ export async function createProjectMessage(input: {
 
 export async function saveGeneratedProjectResult(input: {
   projectId: string
-  assistantContent: string
+  assistantMessageContent: string
   currentHtml: string
 }) {
   assertDatabaseConfigured()
@@ -137,7 +137,7 @@ export async function saveGeneratedProjectResult(input: {
       data: {
         projectId: input.projectId,
         role: "assistant",
-        content: input.assistantContent,
+        content: input.assistantMessageContent,
       },
       select: {
         id: true,

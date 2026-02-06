@@ -46,7 +46,7 @@ describe("POST /api/generate", () => {
       assistantMessage: {
         id: "assistant-message-1",
         role: "assistant",
-        content: "<!DOCTYPE html><html><body>New</body></html>",
+        content: "Website updated successfully.",
         createdAt: "2026-03-26T00:00:00.000Z",
       },
     })
@@ -77,7 +77,7 @@ describe("POST /api/generate", () => {
     })
     expect(dbMock.saveGeneratedProjectResult).toHaveBeenCalledWith({
       projectId: "project-1",
-      assistantContent: "<!DOCTYPE html><html><body>New</body></html>",
+      assistantMessageContent: "Website updated successfully.",
       currentHtml: "<!DOCTYPE html><html><body>New</body></html>",
     })
     expect(body).toEqual({
@@ -90,7 +90,7 @@ describe("POST /api/generate", () => {
       assistantMessage: {
         id: "assistant-message-1",
         role: "assistant",
-        content: "<!DOCTYPE html><html><body>New</body></html>",
+        content: "Website updated successfully.",
         createdAt: "2026-03-26T00:00:00.000Z",
       },
     })

@@ -9,6 +9,8 @@ import {
 } from "@/lib/db/projects"
 import { generateRequestSchema } from "@/lib/schemas/generate"
 
+const ASSISTANT_SUCCESS_MESSAGE = "Website updated successfully."
+
 export async function POST(request: Request) {
   try {
     const json = await request.json().catch(() => ({}))
@@ -42,7 +44,7 @@ export async function POST(request: Request) {
     const currentHtml = extractHtmlDocument(assistantContent)
     const savedResult = await saveGeneratedProjectResult({
       projectId: project.id,
-      assistantContent,
+      assistantMessageContent: ASSISTANT_SUCCESS_MESSAGE,
       currentHtml,
     })
 
