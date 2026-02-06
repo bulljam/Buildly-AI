@@ -9,12 +9,6 @@ import { Button } from "@/components/ui/button"
 import { shouldSubmitPromptOnKeyDown } from "@/lib/builder/chat-ux"
 import { canSubmitPrompt } from "@/lib/builder/generate-state"
 
-const starterPrompts = [
-  "Create a clean landing page for a SaaS product.",
-  "Design a portfolio site for a freelance designer.",
-  "Build a coffee shop homepage with menu highlights.",
-]
-
 const placeholderTimestamp = new Date("2026-03-26T09:00:00.000Z")
 
 const placeholderMessages: Array<
@@ -42,7 +36,6 @@ type ChatPanelProps = {
   isLoading?: boolean
   messages?: MessageRecord[]
   onInputChange?: (value: string) => void
-  onStarterPrompt?: (prompt: string) => void
   onSubmit?: (prompt: string) => void
   projectName?: string
 }
@@ -53,7 +46,6 @@ export function ChatPanel({
   isLoading = false,
   messages = [],
   onInputChange,
-  onStarterPrompt,
   onSubmit,
   projectName,
 }: ChatPanelProps) {
@@ -89,25 +81,6 @@ export function ChatPanel({
       </div>
 
       <div className="space-y-3 border-t border-border/70 bg-background/80 px-4 py-4 backdrop-blur">
-        <div className="rounded-2xl border border-dashed border-border/80 bg-background/80 p-3">
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            Starter prompts
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {starterPrompts.map((prompt) => (
-              <button
-                key={prompt}
-                type="button"
-                disabled={isLoading}
-                onClick={() => onStarterPrompt?.(prompt)}
-                className="rounded-full border border-border bg-card px-3 py-1.5 text-left text-[11px] text-muted-foreground transition hover:border-foreground/20 hover:text-foreground"
-              >
-                {prompt}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {error ? (
           <div className="rounded-2xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
             {error}
@@ -152,7 +125,7 @@ export function ChatPanel({
                   ? "Generating and saving the new HTML snapshot..."
                   : hasMessages
                     ? "Saved history loaded successfully."
-                    : "Start with a prompt or use one of the examples above."}
+                    : "Start with a prompt to generate your first website."}
               </p>
               <Button disabled={!submitEnabled} className="rounded-full px-4">
                 {isLoading ? "Generating..." : "Generate"}

@@ -130,7 +130,6 @@ export function ProjectBuilder({
           isLoading={isLoading}
           messages={messages}
           onInputChange={setInputValue}
-          onStarterPrompt={submitPrompt}
           onSubmit={submitPrompt}
           projectName={projectName}
         />
