@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
 import { extractHtmlDocument } from "@/lib/ai/extract-html"
-import { generateHtmlWithOpenRouter } from "@/lib/ai/openrouter"
+import { generateHtmlWithGroq } from "@/lib/ai/groq"
 import {
   createProjectMessage,
   getProjectById,
@@ -10,6 +10,7 @@ import {
 import { generateRequestSchema } from "@/lib/schemas/generate"
 
 const ASSISTANT_SUCCESS_MESSAGE = "Website updated successfully."
+const GENERIC_GENERATE_ERROR = "Unable to generate HTML right now."
 
 export async function POST(request: Request) {
   try {
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
       content: result.data.prompt,
     })
 
-    const assistantContent = await generateHtmlWithOpenRouter({
+    const assistantContent = await generateHtmlWithGroq({
       currentHtml: project.currentHtml,
       prompt: result.data.prompt,
     })
@@ -54,10 +55,11 @@ export async function POST(request: Request) {
 
     const message =
       error instanceof Error ? error.message : "Generation failed."
+    const isDevelopment = process.env.NODE_ENV !== "production"
     const status =
       message === "AI returned malformed HTML."
         ? 502
-        : message === "Missing OPENROUTER_API_KEY."
+        : message === "Missing GROQ_API_KEY."
           ? 500
           : 502
 
@@ -66,9 +68,11 @@ export async function POST(request: Request) {
         error:
           message === "AI returned malformed HTML."
             ? "The AI response did not contain a valid HTML document."
-            : message === "Missing OPENROUTER_API_KEY."
-              ? "OpenRouter is not configured on the server."
-              : "Unable to generate HTML right now.",
+            : message === "Missing GROQ_API_KEY."
+              ? "Groq is not configured on the server."
+              : isDevelopment
+                ? message
+                : GENERIC_GENERATE_ERROR,
       },
       { status }
     )

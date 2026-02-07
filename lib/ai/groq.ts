@@ -1,7 +1,7 @@
-import { getOpenRouterConfig } from "@/lib/ai/openrouter-config"
+import { getGroqConfig } from "@/lib/ai/groq-config"
 import { buildWebsiteGenerationPrompt } from "@/lib/ai/prompts"
 
-type OpenRouterResponse = {
+type GroqResponse = {
   choices?: Array<{
     message?: {
       content?: string
@@ -12,19 +12,17 @@ type OpenRouterResponse = {
   }
 }
 
-export async function generateHtmlWithOpenRouter(options: {
+export async function generateHtmlWithGroq(options: {
   currentHtml: string
   prompt: string
 }) {
-  const { apiKey, appName, appUrl, model, url } = getOpenRouterConfig()
+  const { apiKey, model, url } = getGroqConfig()
 
   const response = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      ...(appUrl ? { "HTTP-Referer": appUrl } : {}),
-      "X-Title": appName,
     },
     body: JSON.stringify({
       model,
@@ -32,19 +30,17 @@ export async function generateHtmlWithOpenRouter(options: {
     }),
   })
 
-  const json = (await response
-    .json()
-    .catch(() => null)) as OpenRouterResponse | null
+  const json = (await response.json().catch(() => null)) as GroqResponse | null
 
   if (!response.ok) {
-    const message = json?.error?.message || "OpenRouter request failed."
+    const message = json?.error?.message || "Groq request failed."
     throw new Error(message)
   }
 
   const content = json?.choices?.[0]?.message?.content?.trim()
 
   if (!content) {
-    throw new Error("OpenRouter returned an empty response.")
+    throw new Error("Groq returned an empty response.")
   }
 
   return content
