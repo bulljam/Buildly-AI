@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest"
 
 const { aiMock, dbMock, extractMock } = vi.hoisted(() => ({
   aiMock: {
-    generateHtmlWithOpenRouter: vi.fn(),
+    generateHtmlWithGroq: vi.fn(),
   },
   dbMock: {
     createProjectMessage: vi.fn(),
@@ -14,13 +14,48 @@ const { aiMock, dbMock, extractMock } = vi.hoisted(() => ({
   },
 }))
 
-vi.mock("@/lib/ai/openrouter", () => aiMock)
+vi.mock("@/lib/ai/groq", () => aiMock)
 vi.mock("@/lib/db/projects", () => dbMock)
 vi.mock("@/lib/ai/extract-html", () => extractMock)
 
 import { POST } from "@/app/api/generate/route"
 
 describe("POST /api/generate", () => {
+  it("surfaces the upstream provider error in development", async () => {
+    vi.stubEnv("NODE_ENV", "development")
+    dbMock.getProjectById.mockResolvedValueOnce({
+      id: "project-dev",
+      currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
+    })
+    dbMock.createProjectMessage.mockResolvedValueOnce({
+      id: "user-message-dev",
+    })
+    aiMock.generateHtmlWithGroq.mockRejectedValueOnce(
+      new Error("Provider returned error")
+    )
+
+    const request = new Request("http://localhost/api/generate", {
+      method: "POST",
+      body: JSON.stringify({
+        projectId: "project-dev",
+        prompt: "Refresh the layout",
+      }),
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+
+    const response = await POST(request)
+    const body = await response.json()
+
+    expect(response.status).toBe(502)
+    expect(body).toEqual({
+      error: "Provider returned error",
+    })
+
+    vi.unstubAllEnvs()
+  })
+
   it("generates html and saves the updated project state", async () => {
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-1",
@@ -30,7 +65,7 @@ describe("POST /api/generate", () => {
     dbMock.createProjectMessage.mockResolvedValueOnce({
       id: "user-message-1",
     })
-    aiMock.generateHtmlWithOpenRouter.mockResolvedValueOnce(
+    aiMock.generateHtmlWithGroq.mockResolvedValueOnce(
       "<!DOCTYPE html><html><body>New</body></html>"
     )
     extractMock.extractHtmlDocument.mockReturnValueOnce(
@@ -71,7 +106,7 @@ describe("POST /api/generate", () => {
       role: "user",
       content: "Add a hero section",
     })
-    expect(aiMock.generateHtmlWithOpenRouter).toHaveBeenCalledWith({
+    expect(aiMock.generateHtmlWithGroq).toHaveBeenCalledWith({
       currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
       prompt: "Add a hero section",
     })
@@ -148,7 +183,7 @@ describe("POST /api/generate", () => {
     dbMock.createProjectMessage.mockResolvedValueOnce({
       id: "user-message-2",
     })
-    aiMock.generateHtmlWithOpenRouter.mockResolvedValueOnce(
+    aiMock.generateHtmlWithGroq.mockResolvedValueOnce(
       "<div>fragment</div>"
     )
     extractMock.extractHtmlDocument.mockImplementationOnce(() => {
@@ -175,7 +210,7 @@ describe("POST /api/generate", () => {
     })
   })
 
-  it("returns 500 when OpenRouter is not configured", async () => {
+  it("returns 500 when Groq is not configured", async () => {
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-3",
       currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
@@ -183,8 +218,8 @@ describe("POST /api/generate", () => {
     dbMock.createProjectMessage.mockResolvedValueOnce({
       id: "user-message-3",
     })
-    aiMock.generateHtmlWithOpenRouter.mockRejectedValueOnce(
-      new Error("Missing OPENROUTER_API_KEY.")
+    aiMock.generateHtmlWithGroq.mockRejectedValueOnce(
+      new Error("Missing GROQ_API_KEY.")
     )
 
     const request = new Request("http://localhost/api/generate", {
@@ -203,7 +238,42 @@ describe("POST /api/generate", () => {
 
     expect(response.status).toBe(500)
     expect(body).toEqual({
-      error: "OpenRouter is not configured on the server.",
+      error: "Groq is not configured on the server.",
     })
+  })
+
+  it("keeps the generic error message in production", async () => {
+    vi.stubEnv("NODE_ENV", "production")
+    dbMock.getProjectById.mockResolvedValueOnce({
+      id: "project-prod",
+      currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
+    })
+    dbMock.createProjectMessage.mockResolvedValueOnce({
+      id: "user-message-prod",
+    })
+    aiMock.generateHtmlWithGroq.mockRejectedValueOnce(
+      new Error("Provider returned error")
+    )
+
+    const request = new Request("http://localhost/api/generate", {
+      method: "POST",
+      body: JSON.stringify({
+        projectId: "project-prod",
+        prompt: "Refresh the layout",
+      }),
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+
+    const response = await POST(request)
+    const body = await response.json()
+
+    expect(response.status).toBe(502)
+    expect(body).toEqual({
+      error: "Unable to generate HTML right now.",
+    })
+
+    vi.unstubAllEnvs()
   })
 })
