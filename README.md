@@ -12,7 +12,7 @@ The app keeps one full HTML document per project, shows a live preview in a sand
 - shadcn/ui
 - Prisma ORM
 - SQLite
-- OpenRouter
+- Groq
 - pnpm
 
 ## What Works
@@ -29,9 +29,9 @@ The app keeps one full HTML document per project, shows a live preview in a sand
 Create a local `.env` file with:
 
 ```env
-OPENROUTER_API_KEY=
-OPENROUTER_URL="https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_MODEL="qwen/qwen3-coder:free"
+GROQ_API_KEY=
+GROQ_URL="https://api.groq.com/openai/v1/chat/completions"
+GROQ_MODEL="openai/gpt-oss-20b"
 DATABASE_URL="file:./dev.db"
 ```
 
@@ -108,7 +108,7 @@ Each message stores:
 
 1. The user submits a prompt on a project page.
 2. The app saves the user message.
-3. The server sends the prompt plus current HTML to OpenRouter.
+3. The server sends the prompt plus current HTML to Groq.
 4. The response is sanitized into one full HTML document.
 5. The assistant message is saved.
 6. The project `currentHtml` is updated.
