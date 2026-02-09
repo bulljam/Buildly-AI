@@ -210,6 +210,43 @@ describe("POST /api/generate", () => {
     })
   })
 
+  it("returns 502 when the AI returns unchanged HTML", async () => {
+    dbMock.getProjectById.mockResolvedValueOnce({
+      id: "project-unchanged",
+      currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
+    })
+    dbMock.createProjectMessage.mockResolvedValueOnce({
+      id: "user-message-unchanged",
+    })
+    aiMock.generateHtmlWithGroq.mockResolvedValueOnce(
+      "<!DOCTYPE html>\n<html>\n  <body>Old</body>\n</html>"
+    )
+    extractMock.extractHtmlDocument.mockReturnValueOnce(
+      "<!DOCTYPE html>\n<html>\n  <body>Old</body>\n</html>"
+    )
+
+    const request = new Request("http://localhost/api/generate", {
+      method: "POST",
+      body: JSON.stringify({
+        projectId: "project-unchanged",
+        prompt: "Make it a modern marketing page",
+      }),
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+
+    const response = await POST(request)
+    const body = await response.json()
+
+    expect(response.status).toBe(502)
+    expect(body).toEqual({
+      error:
+        "The model did not produce a new website. Try a more specific prompt or a different model.",
+    })
+    expect(dbMock.saveGeneratedProjectResult).not.toHaveBeenCalled()
+  })
+
   it("returns 500 when Groq is not configured", async () => {
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-3",
