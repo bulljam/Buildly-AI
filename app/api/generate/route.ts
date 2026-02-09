@@ -12,6 +12,10 @@ import { generateRequestSchema } from "@/lib/schemas/generate"
 const ASSISTANT_SUCCESS_MESSAGE = "Website updated successfully."
 const GENERIC_GENERATE_ERROR = "Unable to generate HTML right now."
 
+function normalizeHtmlForComparison(value: string) {
+  return value.replace(/>\s+</g, "><").replace(/\s+/g, " ").trim()
+}
+
 export async function POST(request: Request) {
   try {
     const json = await request.json().catch(() => ({}))
@@ -43,6 +47,14 @@ export async function POST(request: Request) {
       prompt: result.data.prompt,
     })
     const currentHtml = extractHtmlDocument(assistantContent)
+
+    if (
+      normalizeHtmlForComparison(currentHtml) ===
+      normalizeHtmlForComparison(project.currentHtml)
+    ) {
+      throw new Error("AI returned unchanged HTML.")
+    }
+
     const savedResult = await saveGeneratedProjectResult({
       projectId: project.id,
       assistantMessageContent: ASSISTANT_SUCCESS_MESSAGE,
@@ -59,6 +71,8 @@ export async function POST(request: Request) {
     const status =
       message === "AI returned malformed HTML."
         ? 502
+        : message === "AI returned unchanged HTML."
+          ? 502
         : message === "Missing GROQ_API_KEY."
           ? 500
           : 502
@@ -68,6 +82,8 @@ export async function POST(request: Request) {
         error:
           message === "AI returned malformed HTML."
             ? "The AI response did not contain a valid HTML document."
+            : message === "AI returned unchanged HTML."
+              ? "The model did not produce a new website. Try a more specific prompt or a different model."
             : message === "Missing GROQ_API_KEY."
               ? "Groq is not configured on the server."
               : isDevelopment
