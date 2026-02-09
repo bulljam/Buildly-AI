@@ -33,6 +33,18 @@ describe("extractHtmlDocument", () => {
     )
   })
 
+  it("extracts a full html document when commentary surrounds a plain html tag", () => {
+    const response = [
+      "Here is your page:",
+      "<html><body><h1>Hello</h1></body></html>",
+      "Thanks!",
+    ].join("\n")
+
+    expect(extractHtmlDocument(response)).toBe(
+      "<html><body><h1>Hello</h1></body></html>"
+    )
+  })
+
   it("throws when the response is not a complete html document", () => {
     expect(() => extractHtmlDocument("<div>Only a fragment</div>")).toThrow(
       "AI returned malformed HTML."

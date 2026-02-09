@@ -14,8 +14,10 @@ export function extractHtmlDocument(value: string) {
     return documentMatch[0].trim()
   }
 
-  if (/^<html[\s\S]*<\/html>$/i.test(sanitized)) {
-    return sanitized
+  const htmlMatch = sanitized.match(/<html[\s\S]*<\/html>/i)
+
+  if (htmlMatch) {
+    return htmlMatch[0].trim()
   }
 
   throw new Error("AI returned malformed HTML.")
