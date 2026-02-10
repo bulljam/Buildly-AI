@@ -16,7 +16,13 @@ function normalizeHtmlForComparison(value: string) {
   return value.replace(/>\s+</g, "><").replace(/\s+/g, " ").trim()
 }
 
+function buildRawResponsePreview(value: string) {
+  return value.replace(/\s+/g, " ").trim().slice(0, 240)
+}
+
 export async function POST(request: Request) {
+  let rawAiResponse = ""
+
   try {
     const json = await request.json().catch(() => ({}))
     const result = generateRequestSchema.safeParse(json)
@@ -46,6 +52,7 @@ export async function POST(request: Request) {
       currentHtml: project.currentHtml,
       prompt: result.data.prompt,
     })
+    rawAiResponse = assistantContent
     const currentHtml = extractHtmlDocument(assistantContent)
 
     if (
@@ -81,7 +88,9 @@ export async function POST(request: Request) {
       {
         error:
           message === "AI returned malformed HTML."
-            ? "The AI response did not contain a valid HTML document."
+            ? isDevelopment && rawAiResponse
+              ? `The AI response did not contain a valid HTML document. Raw response preview: ${buildRawResponsePreview(rawAiResponse)}`
+              : "The AI response did not contain a valid HTML document."
             : message === "AI returned unchanged HTML."
               ? "The model did not produce a new website. Try a more specific prompt or a different model."
             : message === "Missing GROQ_API_KEY."

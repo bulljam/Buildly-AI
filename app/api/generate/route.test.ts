@@ -176,6 +176,7 @@ describe("POST /api/generate", () => {
   })
 
   it("returns 502 when the AI response cannot be parsed into a full document", async () => {
+    vi.stubEnv("NODE_ENV", "production")
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-2",
       currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
@@ -208,6 +209,47 @@ describe("POST /api/generate", () => {
     expect(body).toEqual({
       error: "The AI response did not contain a valid HTML document.",
     })
+
+    vi.unstubAllEnvs()
+  })
+
+  it("includes a raw response preview for malformed html in development", async () => {
+    vi.stubEnv("NODE_ENV", "development")
+    dbMock.getProjectById.mockResolvedValueOnce({
+      id: "project-2-dev",
+      currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
+    })
+    dbMock.createProjectMessage.mockResolvedValueOnce({
+      id: "user-message-2-dev",
+    })
+    aiMock.generateHtmlWithGroq.mockResolvedValueOnce(
+      "Sure, here is your site: section.hero { color: red; }"
+    )
+    extractMock.extractHtmlDocument.mockImplementationOnce(() => {
+      throw new Error("AI returned malformed HTML.")
+    })
+
+    const request = new Request("http://localhost/api/generate", {
+      method: "POST",
+      body: JSON.stringify({
+        projectId: "project-2-dev",
+        prompt: "Update the footer",
+      }),
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+
+    const response = await POST(request)
+    const body = await response.json()
+
+    expect(response.status).toBe(502)
+    expect(body).toEqual({
+      error:
+        "The AI response did not contain a valid HTML document. Raw response preview: Sure, here is your site: section.hero { color: red; }",
+    })
+
+    vi.unstubAllEnvs()
   })
 
   it("returns 502 when the AI returns unchanged HTML", async () => {
