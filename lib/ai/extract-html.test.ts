@@ -45,6 +45,26 @@ describe("extractHtmlDocument", () => {
     )
   })
 
+  it("rebuilds a full html document from head and body blocks", () => {
+    const response = [
+      "Sure, here it is:",
+      "<head><title>Hello</title><style>body{margin:0;}</style></head>",
+      "<body><h1>Hello</h1></body>",
+    ].join("\n")
+
+    expect(extractHtmlDocument(response)).toBe(
+      "<!DOCTYPE html><html><head><title>Hello</title><style>body{margin:0;}</style></head><body><h1>Hello</h1></body></html>"
+    )
+  })
+
+  it("rebuilds a full html document from a body block only", () => {
+    const response = "<body><main><h1>Hello</h1></main></body>"
+
+    expect(extractHtmlDocument(response)).toBe(
+      "<!DOCTYPE html><html><head></head><body><main><h1>Hello</h1></main></body></html>"
+    )
+  })
+
   it("throws when the response is not a complete html document", () => {
     expect(() => extractHtmlDocument("<div>Only a fragment</div>")).toThrow(
       "AI returned malformed HTML."
