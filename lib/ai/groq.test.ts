@@ -53,7 +53,10 @@ describe("generateHtmlWithGroq", () => {
     const payload = JSON.parse(fetchMock.mock.calls[0]?.[1]?.body as string)
 
     expect(payload.model).toBe("openai/gpt-oss-20b")
-    expect(payload.messages).toHaveLength(2)
+    expect(payload.include_reasoning).toBe(false)
+    expect(payload.max_completion_tokens).toBe(8192)
+    expect(payload.messages).toHaveLength(3)
+    expect(payload.reasoning_effort).toBe("low")
   })
 
   it("throws a helpful error when Groq returns an error response", async () => {
