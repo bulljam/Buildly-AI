@@ -16,7 +16,7 @@ export async function generateHtmlWithGroq(options: {
   currentHtml: string
   prompt: string
 }) {
-  const { apiKey, model, url } = getGroqConfig()
+  const { apiKey, maxCompletionTokens, model, url } = getGroqConfig()
 
   const response = await fetch(url, {
     method: "POST",
@@ -26,7 +26,10 @@ export async function generateHtmlWithGroq(options: {
     },
     body: JSON.stringify({
       model,
+      include_reasoning: false,
+      max_completion_tokens: maxCompletionTokens,
       messages: buildWebsiteGenerationPrompt(options),
+      reasoning_effort: "low",
     }),
   })
 

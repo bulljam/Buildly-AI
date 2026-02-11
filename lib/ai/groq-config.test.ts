@@ -16,6 +16,7 @@ describe("getGroqConfig", () => {
 
     expect(getGroqConfig()).toEqual({
       apiKey: "test-key",
+      maxCompletionTokens: 8192,
       model: "openai/gpt-oss-20b",
       url: "https://api.groq.com/openai/v1/chat/completions",
     })
@@ -25,9 +26,11 @@ describe("getGroqConfig", () => {
     process.env.GROQ_API_KEY = " test-key "
     process.env.GROQ_URL = " https://api.groq.com/openai/v1/chat/completions "
     process.env.GROQ_MODEL = " llama-3.3-70b-versatile "
+    process.env.GROQ_MAX_COMPLETION_TOKENS = " 12000 "
 
     expect(getGroqConfig()).toEqual({
       apiKey: "test-key",
+      maxCompletionTokens: 12000,
       model: "llama-3.3-70b-versatile",
       url: "https://api.groq.com/openai/v1/chat/completions",
     })
