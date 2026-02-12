@@ -19,12 +19,18 @@ describe("buildWebsiteGenerationPrompt", () => {
     expect(messages[0]?.content).toContain(
       "Make the visual design feel modern, intentional, and specific to the prompt instead of generic or template-like."
     )
+    expect(messages[0]?.content).toContain(
+      "If the design includes images, use valid direct image URLs that resolve to actual image files, or use a self-contained inline SVG/data URI placeholder instead."
+    )
     expect(messages[1]?.content).toContain("Requirements:")
     expect(messages[1]?.content).toContain(
       "- Include polished inline CSS that renders correctly without missing variables or assets."
     )
     expect(messages[1]?.content).toContain(
       "- Make the design feel contemporary and tailored to the prompt, not like a generic starter template."
+    )
+    expect(messages[1]?.content).toContain(
+      "- If you add images, use working direct image URLs or inline SVG/data URI placeholders."
     )
     expect(messages[2]).toEqual({
       role: "assistant",

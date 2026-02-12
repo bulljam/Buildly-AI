@@ -18,6 +18,8 @@ Avoid default hero/feature/card patterns unless the prompt truly calls for them.
 Use a clear visual direction with cohesive color, type scale, spacing, and section rhythm.
 Design for a contemporary 2026-style product or brand site with thoughtful composition and polished UI details.
 If a design system is introduced with CSS variables, make sure every variable used is defined.
+If the design includes images, use valid direct image URLs that resolve to actual image files, or use a self-contained inline SVG/data URI placeholder instead.
+Never use fake, broken, empty, or non-image URLs.
 `.trim()
 
 export function buildWebsiteGenerationPrompt(options: {
@@ -41,6 +43,7 @@ export function buildWebsiteGenerationPrompt(options: {
         "- Include polished inline CSS that renders correctly without missing variables or assets.",
         "- Make the layout responsive and visually modern.",
         "- Make the design feel contemporary and tailored to the prompt, not like a generic starter template.",
+        "- If you add images, use working direct image URLs or inline SVG/data URI placeholders.",
         "- When editing, preserve useful existing sections unless the instruction replaces them.",
         "",
         "Current HTML:",
