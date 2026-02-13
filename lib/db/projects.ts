@@ -1,6 +1,9 @@
 import { DEFAULT_PROJECT_HTML } from "@/lib/db/default-html"
 import { assertDatabaseConfigured, prisma } from "@/lib/db/prisma"
-import type { CreateProjectInput } from "@/lib/schemas/project"
+import type {
+  CreateProjectInput,
+  UpdateProjectInput,
+} from "@/lib/schemas/project"
 import type { MessageRole } from "@/lib/schemas/message"
 
 const DEFAULT_PROJECT_NAME = "Untitled Project"
@@ -47,6 +50,27 @@ export async function getProjectById(projectId: string) {
 
   return prisma.project.findUnique({
     where: { id: projectId },
+    select: {
+      id: true,
+      name: true,
+      currentHtml: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  })
+}
+
+export async function updateProjectName(
+  projectId: string,
+  input: UpdateProjectInput
+) {
+  assertDatabaseConfigured()
+
+  return prisma.project.update({
+    where: { id: projectId },
+    data: {
+      name: input.name,
+    },
     select: {
       id: true,
       name: true,

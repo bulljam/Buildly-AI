@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest"
 
-import { createProjectSchema } from "@/lib/schemas/project"
+import {
+  createProjectSchema,
+  updateProjectSchema,
+} from "@/lib/schemas/project"
 
 describe("createProjectSchema", () => {
   it("accepts a valid project name and trims it", () => {
@@ -42,6 +45,30 @@ describe("createProjectSchema", () => {
       expect(result.error.issues[0]?.message).toBe(
         "Project name must be 80 characters or less."
       )
+    }
+  })
+})
+
+describe("updateProjectSchema", () => {
+  it("accepts a valid project name and trims it", () => {
+    const result = updateProjectSchema.parse({
+      name: "  Coffee Brand  ",
+    })
+
+    expect(result).toEqual({
+      name: "Coffee Brand",
+    })
+  })
+
+  it("rejects a blank project name", () => {
+    const result = updateProjectSchema.safeParse({
+      name: "   ",
+    })
+
+    expect(result.success).toBe(false)
+
+    if (!result.success) {
+      expect(result.error.issues[0]?.message).toBe("Project name is required.")
     }
   })
 })
