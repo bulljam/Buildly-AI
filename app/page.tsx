@@ -1,9 +1,7 @@
-import { redirect } from "next/navigation"
-
 import { AppHeader } from "@/components/layout/app-header"
 import { NewProjectButton } from "@/components/projects/new-project-button"
 import { ProjectList } from "@/components/projects/project-list"
-import { createProject, listProjects } from "@/lib/db/projects"
+import { listProjects } from "@/lib/db/projects"
 import { isDatabaseConfigured } from "@/lib/db/prisma"
 import {
   DATABASE_SETUP_MESSAGE,
@@ -29,13 +27,6 @@ export default async function Page() {
     }
   }
 
-  async function createProjectAction() {
-    "use server"
-
-    const project = await createProject()
-    redirect(`/projects/${project.id}`)
-  }
-
   return (
     <div className="flex min-h-svh flex-col bg-background">
       <AppHeader />
@@ -54,10 +45,7 @@ export default async function Page() {
             </p>
           </div>
           <div>
-            <NewProjectButton
-              action={createProjectAction}
-              disabled={!databaseConfigured}
-            />
+            <NewProjectButton disabled={!databaseConfigured} />
           </div>
         </section>
 
