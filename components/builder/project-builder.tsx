@@ -2,10 +2,12 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import { Pencil } from "lucide-react"
 import { nanoid } from "nanoid"
 
 import { ChatPanel } from "@/components/chat/chat-panel"
 import { PreviewPanel } from "@/components/preview/preview-panel"
+import { ProjectNameDialog } from "@/components/projects/project-name-dialog"
 import { Button } from "@/components/ui/button"
 import {
   appendAssistantMessage,
@@ -48,6 +50,10 @@ export function ProjectBuilder({
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [currentProjectName, setCurrentProjectName] = useState(projectName)
+  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false)
+  const [renameError, setRenameError] = useState<string | null>(null)
+  const [isRenaming, setIsRenaming] = useState(false)
 
   async function submitPrompt(rawPrompt: string) {
     if (!canSubmitPrompt(rawPrompt, isLoading)) {
@@ -120,7 +126,22 @@ export function ProjectBuilder({
         <Button asChild variant="outline" size="sm" className="rounded-full px-4">
           <Link href="/">Back to projects</Link>
         </Button>
-        <div className="truncate text-sm text-muted-foreground">{projectName}</div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="max-w-[240px] truncate sm:max-w-[320px]">
+            {currentProjectName}
+          </div>
+          <button
+            type="button"
+            aria-label="Rename project"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition hover:text-foreground"
+            onClick={() => {
+              setRenameError(null)
+              setIsRenameDialogOpen(true)
+            }}
+          >
+            <Pencil className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[360px_minmax(0,1fr)] xl:grid-cols-[380px_minmax(0,1fr)]">
@@ -131,14 +152,66 @@ export function ProjectBuilder({
           messages={messages}
           onInputChange={setInputValue}
           onSubmit={submitPrompt}
-          projectName={projectName}
+          projectName={currentProjectName}
         />
         <PreviewPanel
           html={html}
           isLoading={isLoading}
-          projectName={projectName}
+          projectName={currentProjectName}
         />
       </section>
+
+      <ProjectNameDialog
+        confirmLabel="Save name"
+        defaultValue={currentProjectName}
+        description="Update the project name shown across the workspace."
+        error={renameError}
+        isOpen={isRenameDialogOpen}
+        isSubmitting={isRenaming}
+        title="Rename project"
+        onOpenChange={(nextOpen) => {
+          setIsRenameDialogOpen(nextOpen)
+          if (!nextOpen) {
+            setRenameError(null)
+          }
+        }}
+        onSubmit={async (name) => {
+          setIsRenaming(true)
+          setRenameError(null)
+
+          try {
+            const response = await fetch(`/api/projects/${projectId}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name,
+              }),
+            })
+            const body = (await response.json().catch(() => null)) as
+              | { project?: { name: string }; error?: string }
+              | null
+
+            if (!response.ok || !body?.project?.name) {
+              throw new Error(
+                body?.error ?? "Unable to update this project right now."
+              )
+            }
+
+            setCurrentProjectName(body.project.name)
+            setIsRenameDialogOpen(false)
+          } catch (submitError) {
+            setRenameError(
+              submitError instanceof Error
+                ? submitError.message
+                : "Unable to update this project right now."
+            )
+          } finally {
+            setIsRenaming(false)
+          }
+        }}
+      />
     </main>
   )
 }
