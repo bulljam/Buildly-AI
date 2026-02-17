@@ -12,10 +12,17 @@ type ProjectPageProps = {
   params: Promise<{
     projectId: string
   }>
+  searchParams?: Promise<{
+    prompt?: string
+  }>
 }
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
+export default async function ProjectPage({
+  params,
+  searchParams,
+}: ProjectPageProps) {
   const { projectId } = await params
+  const resolvedSearchParams = searchParams ? await searchParams : undefined
 
   if (!isDatabaseConfigured()) {
     return (
@@ -42,6 +49,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <ProjectBuilder
         initialHtml={project.currentHtml}
         initialMessages={project.messages}
+        initialPrompt={resolvedSearchParams?.prompt}
         projectId={project.id}
         projectName={project.name}
       />

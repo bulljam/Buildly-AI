@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useEffectEvent, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Pencil } from "lucide-react"
 import { nanoid } from "nanoid"
 
@@ -20,6 +21,7 @@ import type { MessageRecord } from "@/lib/schemas/message"
 type ProjectBuilderProps = {
   initialHtml: string
   initialMessages: MessageRecord[]
+  initialPrompt?: string
   projectId: string
   projectName: string
 }
@@ -42,9 +44,11 @@ type GenerateResponse = {
 export function ProjectBuilder({
   initialHtml,
   initialMessages,
+  initialPrompt = "",
   projectId,
   projectName,
 }: ProjectBuilderProps) {
+  const router = useRouter()
   const [messages, setMessages] = useState(initialMessages)
   const [html, setHtml] = useState(initialHtml)
   const [inputValue, setInputValue] = useState("")
@@ -54,6 +58,7 @@ export function ProjectBuilder({
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false)
   const [renameError, setRenameError] = useState<string | null>(null)
   const [isRenaming, setIsRenaming] = useState(false)
+  const hasAutoSubmittedRef = useRef(false)
 
   async function submitPrompt(rawPrompt: string) {
     if (!canSubmitPrompt(rawPrompt, isLoading)) {
@@ -120,20 +125,39 @@ export function ProjectBuilder({
     }
   }
 
+  const submitInitialPrompt = useEffectEvent(async (prompt: string) => {
+    await submitPrompt(prompt)
+    router.replace(`/projects/${projectId}`)
+  })
+
+  useEffect(() => {
+    if (hasAutoSubmittedRef.current || !canSubmitPrompt(initialPrompt, false)) {
+      return
+    }
+
+    hasAutoSubmittedRef.current = true
+    void submitInitialPrompt(initialPrompt)
+  }, [initialPrompt])
+
   return (
-    <main className="mx-auto flex w-full max-w-[1680px] flex-1 flex-col px-4 py-4 sm:px-6 lg:px-8">
+    <main className="mx-auto flex w-full max-w-[1680px] flex-1 flex-col bg-[radial-gradient(circle_at_top,_rgba(254,243,199,0.26),_transparent_28%),linear-gradient(180deg,_#fffdf8_0%,_#fffaf2_52%,_#ffffff_100%)] px-4 py-4 sm:px-6 lg:px-8">
       <div className="mb-4 flex items-center justify-between gap-3">
-        <Button asChild variant="outline" size="sm" className="rounded-full px-4">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="rounded-full border-amber-200 bg-white/80 px-4 text-stone-700 hover:bg-white"
+        >
           <Link href="/">Back to projects</Link>
         </Button>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm text-stone-600">
           <div className="max-w-[240px] truncate sm:max-w-[320px]">
             {currentProjectName}
           </div>
           <button
             type="button"
             aria-label="Rename project"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition hover:text-foreground"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-amber-200 bg-white/85 text-stone-500 transition hover:border-amber-300 hover:text-stone-900"
             onClick={() => {
               setRenameError(null)
               setIsRenameDialogOpen(true)
