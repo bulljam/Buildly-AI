@@ -49,7 +49,7 @@ export function ProjectNameDialog({
   return (
     <dialog
       ref={dialogRef}
-      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-3xl border border-border bg-background p-0 text-foreground shadow-2xl backdrop:bg-black/45"
+      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-3xl border border-amber-200/80 bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(255,247,237,0.98)_100%)] p-0 text-stone-900 shadow-[0_30px_80px_rgba(120,53,15,0.16)] backdrop:bg-stone-950/20"
       onClose={() => {
         if (isOpen) {
           onOpenChange(false)
@@ -71,8 +71,10 @@ export function ProjectNameDialog({
         }}
       >
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-          <p className="text-sm leading-6 text-muted-foreground">
+          <h2 className="text-lg font-semibold tracking-tight text-stone-900">
+            {title}
+          </h2>
+          <p className="text-sm leading-6 text-stone-600">
             {description}
           </p>
         </div>
@@ -80,7 +82,7 @@ export function ProjectNameDialog({
         <div className="space-y-2">
           <label
             htmlFor="project-name-input"
-            className="text-sm font-medium text-foreground"
+            className="text-sm font-medium text-stone-900"
           >
             Project name
           </label>
@@ -88,7 +90,7 @@ export function ProjectNameDialog({
             key={`${title}-${defaultValue}-${isOpen ? "open" : "closed"}`}
             id="project-name-input"
             autoFocus
-            className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-foreground/30"
+            className="w-full rounded-2xl border border-amber-200 bg-white/90 px-4 py-3 text-sm text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-amber-400"
             defaultValue={defaultValue}
             disabled={isSubmitting}
             maxLength={80}
