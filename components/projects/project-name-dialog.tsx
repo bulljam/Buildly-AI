@@ -49,7 +49,7 @@ export function ProjectNameDialog({
   return (
     <dialog
       ref={dialogRef}
-      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-3xl border border-amber-200/80 bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(255,247,237,0.98)_100%)] p-0 text-stone-900 shadow-[0_30px_80px_rgba(120,53,15,0.16)] backdrop:bg-stone-950/20"
+      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-3xl border border-white/10 bg-[linear-gradient(180deg,_rgba(59,28,50,0.92)_0%,_rgba(26,26,29,0.96)_100%)] p-0 text-white shadow-[0_30px_80px_rgba(0,0,0,0.3)] backdrop:bg-[#1A1A1D]/34"
       onClose={() => {
         if (isOpen) {
           onOpenChange(false)
@@ -71,10 +71,10 @@ export function ProjectNameDialog({
         }}
       >
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold tracking-tight text-stone-900">
+          <h2 className="text-lg font-semibold tracking-tight text-white">
             {title}
           </h2>
-          <p className="text-sm leading-6 text-stone-600">
+          <p className="text-sm leading-6 text-white/68">
             {description}
           </p>
         </div>
@@ -82,7 +82,7 @@ export function ProjectNameDialog({
         <div className="space-y-2">
           <label
             htmlFor="project-name-input"
-            className="text-sm font-medium text-stone-900"
+            className="text-sm font-medium text-white"
           >
             Project name
           </label>
@@ -90,7 +90,7 @@ export function ProjectNameDialog({
             key={`${title}-${defaultValue}-${isOpen ? "open" : "closed"}`}
             id="project-name-input"
             autoFocus
-            className="w-full rounded-2xl border border-amber-200 bg-white/90 px-4 py-3 text-sm text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-amber-400"
+            className="w-full rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-[#A64D79]"
             defaultValue={defaultValue}
             disabled={isSubmitting}
             maxLength={80}
