@@ -63,31 +63,31 @@ export function ChatPanel({
   }, [latestMessageCount])
 
   return (
-    <section className="flex min-h-[520px] flex-col overflow-hidden rounded-[2rem] border border-amber-200/80 bg-[linear-gradient(180deg,_rgba(255,255,255,0.94)_0%,_rgba(255,250,240,0.96)_100%)] shadow-[0_20px_60px_rgba(120,53,15,0.08)] lg:h-[calc(100svh-6.5rem)]">
-      <div className="border-b border-amber-100 bg-white/75 px-5 py-4 backdrop-blur">
-        <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-amber-700/80">
+    <section className="flex min-h-[520px] flex-col overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,_rgba(59,28,50,0.76)_0%,_rgba(26,26,29,0.92)_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.24)] lg:h-[calc(100svh-6.5rem)]">
+      <div className="border-b border-white/8 bg-black/10 px-5 py-4 backdrop-blur">
+        <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-[#A64D79]">
           Chat
         </p>
-        <p className="mt-2 truncate text-base font-semibold tracking-tight text-stone-900">
+        <p className="mt-2 truncate text-base font-semibold tracking-tight text-white">
           {projectName || "Current project"}
         </p>
       </div>
 
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto bg-gradient-to-b from-white/50 via-amber-50/40 to-transparent px-4 py-4"
+        className="flex-1 overflow-y-auto bg-gradient-to-b from-white/4 via-[#A64D79]/8 to-transparent px-4 py-4"
       >
         <ChatMessageList messages={items} />
       </div>
 
-      <div className="space-y-3 border-t border-amber-100 bg-white/80 px-4 py-4 backdrop-blur">
+      <div className="space-y-3 border-t border-white/8 bg-black/10 px-4 py-4 backdrop-blur">
         {error ? (
           <div className="rounded-2xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
             {error}
           </div>
         ) : null}
 
-        <div className="rounded-[1.5rem] border border-amber-200/80 bg-white/90 shadow-sm">
+        <div className="rounded-[1.5rem] border border-white/8 bg-white/4 shadow-sm">
           <form
             onSubmit={(event) => {
               event.preventDefault()
@@ -100,7 +100,7 @@ export function ChatPanel({
             }}
           >
             <textarea
-              className="min-h-36 w-full resize-none bg-transparent px-4 py-3 text-sm leading-6 text-stone-900 outline-none placeholder:text-stone-400"
+              className="min-h-36 w-full resize-none bg-transparent px-4 py-3 text-sm leading-6 text-white outline-none placeholder:text-white/35"
               placeholder="Describe the website you want to build..."
               disabled={isLoading}
               value={inputValue}
@@ -119,8 +119,8 @@ export function ChatPanel({
                 }
               }}
             />
-            <div className="flex items-center justify-between gap-3 border-t border-amber-100 px-4 py-3">
-              <p className="text-[11px] leading-5 text-stone-500">
+            <div className="flex items-center justify-between gap-3 border-t border-white/8 px-4 py-3">
+              <p className="text-[11px] leading-5 text-white/55">
                 {isLoading
                   ? "Generating and saving the new HTML snapshot..."
                   : hasMessages
