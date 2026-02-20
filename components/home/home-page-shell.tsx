@@ -3,13 +3,12 @@
 import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
 import {
-  FolderKanban,
+  Folder,
   House,
-  Menu,
+  Layers3,
+  PanelLeftClose,
+  PanelLeftOpen,
   Search,
-  Sparkles,
-  WandSparkles,
-  X,
 } from "lucide-react"
 
 import { ProjectList } from "@/components/projects/project-list"
@@ -88,16 +87,18 @@ export function HomePageShell({
   }
 
   return (
-    <div className="flex min-h-svh bg-[radial-gradient(circle_at_top_left,_rgba(166,77,121,0.22),_transparent_24%),radial-gradient(circle_at_bottom_left,_rgba(106,30,85,0.18),_transparent_22%),linear-gradient(180deg,_#211d22_0%,_#1A1A1D_55%,_#151518_100%)] text-[#EEEEEE]">
+    <div className="relative flex min-h-svh overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(166,77,121,0.22),_transparent_24%),radial-gradient(circle_at_bottom_left,_rgba(106,30,85,0.18),_transparent_22%),linear-gradient(180deg,_#211d22_0%,_#1A1A1D_55%,_#151518_100%)] text-[#EEEEEE]">
       <aside
-        className={`${
-          isSidebarOpen ? "w-[280px] px-4 py-4" : "w-0 px-0 py-4"
-        } overflow-hidden border-r border-white/6 bg-black/12 transition-[width,padding] duration-300 backdrop-blur`}
+        className={`absolute inset-y-0 left-0 z-20 w-[280px] p-4 transition-all duration-300 ease-out ${
+          isSidebarOpen
+            ? "translate-x-0 opacity-100"
+            : "-translate-x-[calc(100%+1rem)] opacity-0 pointer-events-none"
+        } lg:z-10`}
       >
-        <div className="flex h-full flex-col rounded-[1.75rem] border border-white/8 bg-[linear-gradient(180deg,_rgba(59,28,50,0.86)_0%,_rgba(26,26,29,0.92)_100%)] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.24)]">
+        <div className="flex h-full flex-col rounded-[1.75rem] border border-white/8 bg-[linear-gradient(180deg,_rgba(59,28,50,0.86)_0%,_rgba(26,26,29,0.92)_100%)] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur">
           <div className="mb-6 flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#1A1A1D] text-white shadow-lg">
-              <Sparkles className="h-5 w-5" />
+              <Layers3 className="h-5 w-5" />
             </div>
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.24em] text-[#A64D79]">
@@ -132,7 +133,7 @@ export function HomePageShell({
               className="flex w-full items-center justify-between rounded-2xl border border-white/8 bg-white/4 px-4 py-3 text-left text-sm font-medium text-[#EEEEEE] transition hover:border-[#A64D79]/40 hover:bg-white/8"
             >
               <span className="flex items-center gap-3">
-                <FolderKanban className="h-4 w-4" />
+                <Folder className="h-4 w-4" />
                 All projects
               </span>
               <span className="rounded-full bg-[#A64D79]/18 px-2.5 py-1 text-xs text-[#EEEEEE]">
@@ -153,7 +154,11 @@ export function HomePageShell({
         </div>
       </aside>
 
-      <main className="flex min-w-0 flex-1 flex-col">
+      <main
+        className={`flex min-w-0 flex-1 flex-col transition-[padding-left] duration-300 ease-out ${
+          isSidebarOpen ? "lg:pl-[296px]" : "lg:pl-0"
+        }`}
+      >
         <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Button
             type="button"
@@ -163,9 +168,9 @@ export function HomePageShell({
             onClick={() => setIsSidebarOpen((current) => !current)}
           >
             {isSidebarOpen ? (
-              <X className="h-4 w-4" />
+              <PanelLeftClose className="h-4 w-4" />
             ) : (
-              <Menu className="h-4 w-4" />
+              <PanelLeftOpen className="h-4 w-4" />
             )}
           </Button>
         </div>
@@ -175,7 +180,7 @@ export function HomePageShell({
             <div className="max-w-4xl">
               <div className="mb-5 flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1A1A1D] text-white shadow-lg">
-                  <WandSparkles className="h-5 w-5" />
+                  <Layers3 className="h-5 w-5" />
                 </div>
                 <div>
                   <p className="text-xs font-medium uppercase tracking-[0.24em] text-[#A64D79]">
