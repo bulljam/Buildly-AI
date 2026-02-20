@@ -14,16 +14,16 @@ export function highlightHtml(value: string) {
     (_, open, tagName, attributes, close) => {
       const highlightedAttributes = attributes.replace(
         /([a-zA-Z-:@]+)=(&quot;.*?&quot;)/g,
-        '<span class="text-sky-300">$1</span>=<span class="text-amber-300">$2</span>'
+        '<span class="text-[#A64D79]">$1</span>=<span class="text-[#EEEEEE]">$2</span>'
       )
 
       return [
-        '<span class="text-zinc-500">',
+        '<span class="text-white/35">',
         open,
         "</span>",
-        `<span class="text-cyan-300">${tagName}</span>`,
+        `<span class="text-[#EEEEEE]">${tagName}</span>`,
         highlightedAttributes,
-        `<span class="text-zinc-500">${close}</span>`,
+        `<span class="text-white/35">${close}</span>`,
       ].join("")
     }
   )
