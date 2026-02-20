@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useEffect, useEffectEvent, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Pencil } from "lucide-react"
+import { PenBox } from "lucide-react"
 import { nanoid } from "nanoid"
 
 import { ChatPanel } from "@/components/chat/chat-panel"
@@ -163,7 +163,7 @@ export function ProjectBuilder({
               setIsRenameDialogOpen(true)
             }}
           >
-            <Pencil className="h-4 w-4" />
+            <PenBox className="h-4 w-4" />
           </button>
         </div>
       </div>

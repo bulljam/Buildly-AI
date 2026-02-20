@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Copy, LoaderCircle } from "lucide-react"
+import { BadgeCheck, Clipboard, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { isPreviewMode, type PreviewMode } from "@/lib/builder/preview-state"
@@ -91,7 +91,7 @@ export function PreviewPanel({
             {isLoading ? (
               <div className="absolute inset-0 flex items-center justify-center bg-[#1A1A1D]/38 backdrop-blur-sm">
                 <div className="flex max-w-xs flex-col items-center gap-3 rounded-3xl border border-white/10 bg-[linear-gradient(180deg,_rgba(59,28,50,0.9)_0%,_rgba(26,26,29,0.96)_100%)] px-6 py-5 text-center shadow-[0_24px_60px_rgba(0,0,0,0.3)]">
-                  <LoaderCircle className="h-6 w-6 animate-spin text-[#1A1A1D]" />
+                  <Loader2 className="h-6 w-6 animate-spin text-[#A64D79]" />
                   <div className="space-y-1">
                     <p className="text-sm font-semibold tracking-tight text-white">
                       Rebuilding preview
@@ -122,12 +122,12 @@ export function PreviewPanel({
               >
                 {hasCopied ? (
                   <>
-                    <Check className="h-4 w-4" />
+                    <BadgeCheck className="h-4 w-4" />
                     Copied
                   </>
                 ) : (
                   <>
-                    <Copy className="h-4 w-4" />
+                    <Clipboard className="h-4 w-4" />
                     Copy HTML
                   </>
                 )}
