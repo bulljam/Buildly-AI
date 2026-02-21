@@ -24,15 +24,15 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
         className={cn(
           "max-w-xl rounded-3xl border px-4 py-3 text-sm leading-6 shadow-xs",
           isUser
-            ? "border-foreground/10 bg-foreground text-background"
-            : "border-border/60 bg-background"
+            ? "border-[#1D4ED8]/15 bg-[#2563EB] text-white"
+            : "border-[#D7E3F4] bg-white text-[#0F172A]"
         )}
       >
         <div className="mb-2 flex items-center gap-2">
           <p
             className={cn(
               "text-[11px] font-medium tracking-[0.18em] uppercase",
-              isUser ? "text-background/70" : "text-muted-foreground"
+              isUser ? "text-white/78" : "text-[#64748B]"
             )}
           >
             {message.role}
@@ -40,7 +40,7 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
           <span
             className={cn(
               "text-[11px]",
-              isUser ? "text-background/60" : "text-muted-foreground"
+              isUser ? "text-white/68" : "text-[#94A3B8]"
             )}
           >
             {formatMessageTimestamp(message.createdAt)}

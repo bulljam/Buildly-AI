@@ -140,24 +140,24 @@ export function ProjectBuilder({
   }, [initialPrompt])
 
   return (
-    <main className="mx-auto flex w-full max-w-[1680px] flex-1 flex-col bg-[radial-gradient(circle_at_top,_rgba(166,77,121,0.18),_transparent_28%),linear-gradient(180deg,_#232225_0%,_#1A1A1D_52%,_#151518_100%)] px-4 py-4 sm:px-6 lg:px-8">
+    <main className="mx-auto flex w-full max-w-[1680px] flex-1 flex-col bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.1),_transparent_22%),linear-gradient(180deg,_#f8fbff_0%,_#eef4ff_56%,_#f7f5ef_100%)] px-4 py-4 sm:px-6 lg:px-8">
       <div className="mb-4 flex items-center justify-between gap-3">
         <Button
           asChild
           variant="outline"
           size="sm"
-          className="rounded-full border-white/8 bg-white/6 px-4 text-white hover:bg-white/10"
+          className="rounded-full border-[#D7E3F4] bg-white px-4 text-[#0F172A] hover:bg-[#F8FBFF]"
         >
           <Link href="/">Back to projects</Link>
         </Button>
-        <div className="flex items-center gap-2 text-sm text-white/60">
+        <div className="flex items-center gap-2 text-sm text-[#475569]">
           <div className="max-w-[240px] truncate sm:max-w-[320px]">
             {currentProjectName}
           </div>
           <button
             type="button"
             aria-label="Rename project"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/8 bg-white/6 text-white/70 transition hover:border-[#A64D79]/35 hover:text-white"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#D7E3F4] bg-white text-[#475569] transition hover:border-[#93C5FD] hover:bg-[#F8FBFF] hover:text-[#0F172A]"
             onClick={() => {
               setRenameError(null)
               setIsRenameDialogOpen(true)

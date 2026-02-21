@@ -63,31 +63,31 @@ export function ChatPanel({
   }, [latestMessageCount])
 
   return (
-    <section className="flex min-h-[520px] flex-col overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,_rgba(59,28,50,0.76)_0%,_rgba(26,26,29,0.92)_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.24)] lg:h-[calc(100svh-6.5rem)]">
-      <div className="border-b border-white/8 bg-black/10 px-5 py-4 backdrop-blur">
-        <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-[#A64D79]">
+    <section className="flex min-h-[520px] flex-col overflow-hidden rounded-[2rem] border border-[#D7E3F4] bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(244,248,255,0.98)_100%)] shadow-[0_20px_60px_rgba(37,99,235,0.1)] lg:h-[calc(100svh-6.5rem)]">
+      <div className="border-b border-[#E2E8F0] bg-[#F8FBFF] px-5 py-4 backdrop-blur">
+        <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-[#2563EB]">
           Chat
         </p>
-        <p className="mt-2 truncate text-base font-semibold tracking-tight text-white">
+        <p className="mt-2 truncate text-base font-semibold tracking-tight text-[#0F172A]">
           {projectName || "Current project"}
         </p>
       </div>
 
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto bg-gradient-to-b from-white/4 via-[#A64D79]/8 to-transparent px-4 py-4"
+        className="flex-1 overflow-y-auto bg-gradient-to-b from-[#F8FBFF] via-transparent to-transparent px-4 py-4"
       >
         <ChatMessageList messages={items} />
       </div>
 
-      <div className="space-y-3 border-t border-white/8 bg-black/10 px-4 py-4 backdrop-blur">
+      <div className="space-y-3 border-t border-[#E2E8F0] bg-[#F8FBFF] px-4 py-4 backdrop-blur">
         {error ? (
           <div className="rounded-2xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
             {error}
           </div>
         ) : null}
 
-        <div className="rounded-[1.5rem] border border-white/8 bg-white/4 shadow-sm">
+        <div className="rounded-[1.5rem] border border-[#D7E3F4] bg-white shadow-sm">
           <form
             onSubmit={(event) => {
               event.preventDefault()
@@ -100,7 +100,7 @@ export function ChatPanel({
             }}
           >
             <textarea
-              className="min-h-36 w-full resize-none bg-transparent px-4 py-3 text-sm leading-6 text-white outline-none placeholder:text-white/35"
+              className="min-h-36 w-full resize-none bg-transparent px-4 py-3 text-sm leading-6 text-[#0F172A] outline-none placeholder:text-[#64748B]"
               placeholder="Describe the website you want to build..."
               disabled={isLoading}
               value={inputValue}
@@ -119,15 +119,18 @@ export function ChatPanel({
                 }
               }}
             />
-            <div className="flex items-center justify-between gap-3 border-t border-white/8 px-4 py-3">
-              <p className="text-[11px] leading-5 text-white/55">
+            <div className="flex items-center justify-between gap-3 border-t border-[#E2E8F0] px-4 py-3">
+              <p className="text-[11px] leading-5 text-[#64748B]">
                 {isLoading
                   ? "Generating and saving the new HTML snapshot..."
                   : hasMessages
                     ? "Saved history loaded successfully."
                     : "Start with a prompt to generate your first website."}
               </p>
-              <Button disabled={!submitEnabled} className="rounded-full px-4">
+              <Button
+                disabled={!submitEnabled}
+                className="rounded-full bg-[#2563EB] px-4 text-white hover:bg-[#1D4ED8]"
+              >
                 {isLoading ? "Generating..." : "Generate"}
               </Button>
             </div>
