@@ -87,7 +87,7 @@ export function HomePageShell({
   }
 
   return (
-    <div className="relative flex min-h-svh overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(166,77,121,0.22),_transparent_24%),radial-gradient(circle_at_bottom_left,_rgba(106,30,85,0.18),_transparent_22%),linear-gradient(180deg,_#211d22_0%,_#1A1A1D_55%,_#151518_100%)] text-[#EEEEEE]">
+    <div className="relative flex min-h-svh overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.12),_transparent_20%),linear-gradient(180deg,_#f8fbff_0%,_#eef4ff_52%,_#f7f5ef_100%)] text-[#0F172A]">
       <aside
         className={`absolute inset-y-0 left-0 z-20 w-[280px] p-4 transition-all duration-300 ease-out ${
           isSidebarOpen
@@ -95,34 +95,34 @@ export function HomePageShell({
             : "-translate-x-[calc(100%+1rem)] opacity-0 pointer-events-none"
         } lg:z-10`}
       >
-        <div className="flex h-full flex-col rounded-[1.75rem] border border-white/8 bg-[linear-gradient(180deg,_rgba(59,28,50,0.86)_0%,_rgba(26,26,29,0.92)_100%)] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur">
+        <div className="flex h-full flex-col rounded-[1.75rem] border border-[#D7E3F4] bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(244,248,255,0.98)_100%)] p-4 shadow-[0_20px_60px_rgba(37,99,235,0.12)] backdrop-blur">
           <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#1A1A1D] text-white shadow-lg">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#2563EB] text-white shadow-lg">
               <Layers3 className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs font-medium uppercase tracking-[0.24em] text-[#A64D79]">
+              <p className="text-xs font-medium uppercase tracking-[0.24em] text-[#2563EB]">
                 Buildly AI
               </p>
-              <p className="text-sm text-white/60">Workspace</p>
+              <p className="text-sm text-[#475569]">Workspace</p>
             </div>
           </div>
 
           <nav className="space-y-2">
             <button
               type="button"
-              className="flex w-full items-center gap-3 rounded-2xl bg-[#1A1A1D] px-4 py-3 text-left text-sm font-medium text-white"
+              className="flex w-full items-center gap-3 rounded-2xl bg-[#E8F0FF] px-4 py-3 text-left text-sm font-medium text-[#0F172A]"
             >
               <House className="h-4 w-4" />
               Home
             </button>
-            <div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-3">
-              <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-[#A64D79]">
+            <div className="rounded-2xl border border-[#D7E3F4] bg-white px-4 py-3">
+              <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-[#2563EB]">
                 <Search className="h-3.5 w-3.5" />
                 Search projects
               </div>
               <input
-                className="w-full bg-transparent text-sm text-[#EEEEEE] outline-none placeholder:text-white/35"
+                className="w-full bg-transparent text-sm text-[#0F172A] outline-none placeholder:text-[#64748B]"
                 placeholder="Search by project name"
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
@@ -130,23 +130,23 @@ export function HomePageShell({
             </div>
             <button
               type="button"
-              className="flex w-full items-center justify-between rounded-2xl border border-white/8 bg-white/4 px-4 py-3 text-left text-sm font-medium text-[#EEEEEE] transition hover:border-[#A64D79]/40 hover:bg-white/8"
+              className="flex w-full items-center justify-between rounded-2xl border border-[#D7E3F4] bg-white px-4 py-3 text-left text-sm font-medium text-[#0F172A] transition hover:border-[#93C5FD] hover:bg-[#F8FBFF]"
             >
               <span className="flex items-center gap-3">
                 <Folder className="h-4 w-4" />
                 All projects
               </span>
-              <span className="rounded-full bg-[#A64D79]/18 px-2.5 py-1 text-xs text-[#EEEEEE]">
+              <span className="rounded-full bg-[#DBEAFE] px-2.5 py-1 text-xs text-[#1D4ED8]">
                 {projects.length}
               </span>
             </button>
           </nav>
 
-          <div className="mt-auto rounded-[1.5rem] border border-dashed border-[#A64D79]/28 bg-[#A64D79]/10 p-4">
-            <p className="text-sm font-medium text-[#EEEEEE]">
+          <div className="mt-auto rounded-[1.5rem] border border-dashed border-[#BFDBFE] bg-[#EFF6FF] p-4">
+            <p className="text-sm font-medium text-[#0F172A]">
               Start from a prompt
             </p>
-            <p className="mt-2 text-sm leading-6 text-white/65">
+            <p className="mt-2 text-sm leading-6 text-[#475569]">
               Create a new concept from the prompt box and keep refining it in
               the workspace.
             </p>
@@ -164,7 +164,7 @@ export function HomePageShell({
             type="button"
             variant="outline"
             size="icon"
-            className="rounded-full border-white/8 bg-white/6 text-[#EEEEEE] hover:bg-white/10"
+            className="rounded-full border-[#D7E3F4] bg-white text-[#0F172A] hover:bg-[#F8FBFF]"
             onClick={() => setIsSidebarOpen((current) => !current)}
           >
             {isSidebarOpen ? (
@@ -176,45 +176,45 @@ export function HomePageShell({
         </div>
 
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 pb-8 sm:px-6 lg:px-8">
-          <section className="rounded-[2rem] border border-white/8 bg-[linear-gradient(135deg,_rgba(59,28,50,0.7)_0%,_rgba(26,26,29,0.88)_60%,_rgba(106,30,85,0.58)_100%)] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.24)] sm:p-8">
+          <section className="rounded-[2rem] border border-[#D7E3F4] bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(244,248,255,0.98)_100%)] p-6 shadow-[0_24px_80px_rgba(37,99,235,0.1)] sm:p-8">
             <div className="max-w-4xl">
               <div className="mb-5 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1A1A1D] text-white shadow-lg">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2563EB] text-white shadow-lg">
                   <Layers3 className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-[0.24em] text-[#A64D79]">
+                  <p className="text-xs font-medium uppercase tracking-[0.24em] text-[#2563EB]">
                     Buildly
                   </p>
-                  <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-4xl">
+                  <h1 className="text-2xl font-semibold tracking-tight text-[#0F172A] sm:text-4xl">
                     Design websites by chatting with your builder.
                   </h1>
                 </div>
               </div>
 
-              <p className="max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
+              <p className="max-w-2xl text-sm leading-7 text-[#475569] sm:text-base">
                 Start with an idea, generate a first version instantly, and
                 iterate from there with a live visual workspace.
               </p>
 
-              <div className="mt-6 rounded-[1.75rem] border border-white/8 bg-black/10 p-3 shadow-sm">
+              <div className="mt-6 rounded-[1.75rem] border border-[#D7E3F4] bg-white p-3 shadow-sm">
                 <div className="flex flex-col gap-3">
                   <textarea
-                    className="min-h-32 w-full resize-none bg-transparent px-3 py-3 text-sm leading-7 text-white outline-none placeholder:text-white/35"
+                    className="min-h-32 w-full resize-none bg-transparent px-3 py-3 text-sm leading-7 text-[#0F172A] outline-none placeholder:text-[#64748B]"
                     placeholder="Ask for a homepage, a travel brand, a coffee shop landing page, a modern SaaS site..."
                     disabled={!databaseConfigured || isSubmitting}
                     value={prompt}
                     onChange={(event) => setPrompt(event.target.value)}
                   />
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/8 px-3 pt-3">
-                    <div className="text-xs leading-5 text-white/60">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#E2E8F0] px-3 pt-3">
+                    <div className="text-xs leading-5 text-[#64748B]">
                       {databaseConfigured
                         ? "Describe the site you want and we’ll create a project and jump straight into generation."
                         : "Configure the database first to create and load projects."}
                     </div>
                     <Button
                       type="button"
-                      className="rounded-full bg-[#A64D79] px-5 text-white hover:bg-[#BF6A95]"
+                      className="rounded-full bg-[#2563EB] px-5 text-white hover:bg-[#1D4ED8]"
                       disabled={
                         !databaseConfigured || !canSubmitPrompt(prompt, isSubmitting)
                       }
@@ -237,10 +237,10 @@ export function HomePageShell({
           <section className="space-y-4">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <h2 className="text-lg font-semibold tracking-tight text-white">
+                <h2 className="text-lg font-semibold tracking-tight text-[#0F172A]">
                   Recently built projects
                 </h2>
-                <p className="mt-1 text-sm text-white/65">
+                <p className="mt-1 text-sm text-[#475569]">
                   Reopen a direction, search the list, or begin a fresh build.
                 </p>
               </div>
