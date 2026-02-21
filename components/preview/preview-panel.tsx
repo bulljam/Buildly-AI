@@ -44,18 +44,18 @@ export function PreviewPanel({
   }
 
   return (
-    <section className="flex min-h-[520px] min-w-0 flex-col overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,_rgba(59,28,50,0.76)_0%,_rgba(26,26,29,0.92)_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.24)] lg:h-[calc(100svh-6.5rem)]">
-      <div className="flex items-center justify-between border-b border-white/8 bg-black/10 px-5 py-4 backdrop-blur">
+    <section className="flex min-h-[520px] min-w-0 flex-col overflow-hidden rounded-[2rem] border border-[#D7E3F4] bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(244,248,255,0.98)_100%)] shadow-[0_20px_60px_rgba(37,99,235,0.1)] lg:h-[calc(100svh-6.5rem)]">
+      <div className="flex items-center justify-between border-b border-[#E2E8F0] bg-[#F8FBFF] px-5 py-4 backdrop-blur">
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-[#A64D79]">
+          <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-[#2563EB]">
             Preview
           </p>
-          <p className="mt-2 text-base font-semibold tracking-tight text-white">
+          <p className="mt-2 text-base font-semibold tracking-tight text-[#0F172A]">
             {projectName}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-full border border-white/8 bg-white/6 p-1">
+          <div className="flex rounded-full border border-[#D7E3F4] bg-white p-1">
             {(["preview", "code"] as const).map((value) => (
               <button
                 key={value}
@@ -68,8 +68,8 @@ export function PreviewPanel({
                 className={cn(
                   "rounded-full px-3 py-1 text-xs capitalize transition",
                   mode === value
-                    ? "bg-white text-[#1A1A1D]"
-                    : "text-white/60 hover:text-white"
+                    ? "bg-[#2563EB] text-white"
+                    : "text-[#64748B] hover:text-[#0F172A]"
                 )}
               >
                 {value}
@@ -79,9 +79,9 @@ export function PreviewPanel({
         </div>
       </div>
 
-      <div className="flex-1 bg-gradient-to-br from-white/4 via-transparent to-[#A64D79]/10 p-4">
+      <div className="flex-1 bg-gradient-to-br from-[#F8FBFF] via-transparent to-transparent p-4">
         {mode === "preview" ? (
-          <div className="relative h-full min-h-[420px] overflow-hidden rounded-[1.75rem] border border-white/8 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+          <div className="relative h-full min-h-[420px] overflow-hidden rounded-[1.75rem] border border-[#D7E3F4] bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
             <iframe
               title="Buildly preview"
               srcDoc={html}
@@ -89,14 +89,14 @@ export function PreviewPanel({
               className="block h-full min-h-[420px] w-full bg-white"
             />
             {isLoading ? (
-              <div className="absolute inset-0 flex items-center justify-center bg-[#1A1A1D]/38 backdrop-blur-sm">
-                <div className="flex max-w-xs flex-col items-center gap-3 rounded-3xl border border-white/10 bg-[linear-gradient(180deg,_rgba(59,28,50,0.9)_0%,_rgba(26,26,29,0.96)_100%)] px-6 py-5 text-center shadow-[0_24px_60px_rgba(0,0,0,0.3)]">
-                  <Loader2 className="h-6 w-6 animate-spin text-[#A64D79]" />
+              <div className="absolute inset-0 flex items-center justify-center bg-white/75 backdrop-blur-sm">
+                <div className="flex max-w-xs flex-col items-center gap-3 rounded-3xl border border-[#D7E3F4] bg-white px-6 py-5 text-center shadow-[0_24px_60px_rgba(37,99,235,0.12)]">
+                  <Loader2 className="h-6 w-6 animate-spin text-[#2563EB]" />
                   <div className="space-y-1">
-                    <p className="text-sm font-semibold tracking-tight text-white">
+                    <p className="text-sm font-semibold tracking-tight text-[#0F172A]">
                       Rebuilding preview
                     </p>
-                    <p className="text-xs leading-5 text-white/68">
+                    <p className="text-xs leading-5 text-[#475569]">
                       Generating updated HTML and keeping your last valid preview visible underneath.
                     </p>
                   </div>
@@ -105,9 +105,9 @@ export function PreviewPanel({
             ) : null}
           </div>
         ) : (
-          <div className="min-h-[420px] overflow-hidden rounded-[1.75rem] border border-white/8 bg-[#211820] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-            <div className="flex items-center justify-between gap-3 border-b border-white/8 px-4 py-3">
-              <div className="text-xs text-white/55">
+          <div className="min-h-[420px] overflow-hidden rounded-[1.75rem] border border-[#D7E3F4] bg-[#F8FBFF] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+            <div className="flex items-center justify-between gap-3 border-b border-[#E2E8F0] px-4 py-3">
+              <div className="text-xs text-[#64748B]">
                 {isLoading
                   ? "Showing the last saved valid HTML snapshot."
                   : "Current saved HTML"}
@@ -116,7 +116,7 @@ export function PreviewPanel({
                 type="button"
                 size="sm"
                 variant="outline"
-                className="border-white/8 bg-white/6 text-white hover:bg-white/10 hover:text-white"
+                className="border-[#D7E3F4] bg-white text-[#0F172A] hover:bg-[#F8FBFF] hover:text-[#0F172A]"
                 onClick={copyHtml}
                 disabled={isCopying}
               >
@@ -133,7 +133,7 @@ export function PreviewPanel({
                 )}
               </Button>
             </div>
-            <pre className="h-[420px] overflow-auto bg-[#211820] p-4 text-xs leading-6 text-[#EEEEEE]">
+            <pre className="h-[420px] overflow-auto bg-[#F8FBFF] p-4 text-xs leading-6 text-[#0F172A]">
               <code
                 dangerouslySetInnerHTML={{
                   __html: highlightedHtml,

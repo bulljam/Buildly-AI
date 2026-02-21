@@ -8,9 +8,9 @@ describe("highlightHtml", () => {
       '<div class="hero" data-mode="preview">Hello</div>'
     )
 
-    expect(result).toContain('class="text-[#EEEEEE]">div</span>')
-    expect(result).toContain('class="text-[#A64D79]">class</span>')
-    expect(result).toContain('class="text-[#EEEEEE]">&quot;hero&quot;</span>')
+    expect(result).toContain('class="text-[#0F172A]">div</span>')
+    expect(result).toContain('class="text-[#2563EB]">class</span>')
+    expect(result).toContain('class="text-[#0F766E]">&quot;hero&quot;</span>')
     expect(result).toContain("Hello")
   })
 
