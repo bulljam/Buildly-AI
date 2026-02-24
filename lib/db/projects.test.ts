@@ -6,6 +6,7 @@ const { prismaMock } = vi.hoisted(() => ({
   prismaMock: {
     project: {
       create: vi.fn(),
+      delete: vi.fn(),
       findMany: vi.fn(),
       findUnique: vi.fn(),
     },
@@ -22,6 +23,7 @@ vi.mock("@/lib/db/prisma", () => ({
 
 import {
   createProject,
+  deleteProject,
   getProjectById,
   getProjectMessages,
   getProjectWithMessages,
@@ -143,6 +145,23 @@ describe("project data helpers", () => {
         currentHtml: true,
         createdAt: true,
         updatedAt: true,
+      },
+    })
+  })
+
+  it("deletes a project by id", async () => {
+    prismaMock.project.delete.mockResolvedValueOnce({
+      id: "project-7",
+      name: "Portfolio",
+    })
+
+    await deleteProject("project-7")
+
+    expect(prismaMock.project.delete).toHaveBeenCalledWith({
+      where: { id: "project-7" },
+      select: {
+        id: true,
+        name: true,
       },
     })
   })
