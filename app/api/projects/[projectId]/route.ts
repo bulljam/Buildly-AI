@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server"
 import { Prisma } from "@prisma/client"
 
-import { getProjectById, updateProjectName } from "@/lib/db/projects"
+import {
+  deleteProject,
+  getProjectById,
+  updateProjectName,
+} from "@/lib/db/projects"
 import { updateProjectSchema } from "@/lib/schemas/project"
 
 type RouteContext = {
@@ -62,6 +66,30 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     return NextResponse.json(
       { error: "Unable to update this project right now." },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(_: Request, context: RouteContext) {
+  const { projectId } = await context.params
+
+  try {
+    const project = await deleteProject(projectId)
+
+    return NextResponse.json({ project })
+  } catch (error) {
+    console.error(`Failed to delete project ${projectId}`, error)
+
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return NextResponse.json({ error: "Project not found." }, { status: 404 })
+    }
+
+    return NextResponse.json(
+      { error: "Unable to delete this project right now." },
       { status: 500 }
     )
   }

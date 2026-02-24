@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest"
 
 const { projectsDbMock } = vi.hoisted(() => ({
   projectsDbMock: {
+    deleteProject: vi.fn(),
     getProjectById: vi.fn(),
     updateProjectName: vi.fn(),
   },
@@ -9,7 +10,7 @@ const { projectsDbMock } = vi.hoisted(() => ({
 
 vi.mock("@/lib/db/projects", () => projectsDbMock)
 
-import { GET, PATCH } from "@/app/api/projects/[projectId]/route"
+import { DELETE, GET, PATCH } from "@/app/api/projects/[projectId]/route"
 
 describe("GET /api/projects/[projectId]", () => {
   it("returns the project when it exists", async () => {
@@ -116,6 +117,43 @@ describe("PATCH /api/projects/[projectId]", () => {
     expect(response.status).toBe(400)
     expect(body).toEqual({
       error: "Project name is required.",
+    })
+  })
+})
+
+describe("DELETE /api/projects/[projectId]", () => {
+  it("deletes the project when it exists", async () => {
+    projectsDbMock.deleteProject.mockResolvedValueOnce({
+      id: "project-1",
+      name: "Coffee Brand",
+    })
+
+    const response = await DELETE(new Request("http://localhost"), {
+      params: Promise.resolve({ projectId: "project-1" }),
+    })
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(projectsDbMock.deleteProject).toHaveBeenCalledWith("project-1")
+    expect(body).toEqual({
+      project: {
+        id: "project-1",
+        name: "Coffee Brand",
+      },
+    })
+  })
+
+  it("returns 500 when deleting fails unexpectedly", async () => {
+    projectsDbMock.deleteProject.mockRejectedValueOnce(new Error("db failed"))
+
+    const response = await DELETE(new Request("http://localhost"), {
+      params: Promise.resolve({ projectId: "project-2" }),
+    })
+    const body = await response.json()
+
+    expect(response.status).toBe(500)
+    expect(body).toEqual({
+      error: "Unable to delete this project right now.",
     })
   })
 })

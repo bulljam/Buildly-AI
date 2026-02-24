@@ -81,6 +81,18 @@ export async function updateProjectName(
   })
 }
 
+export async function deleteProject(projectId: string) {
+  assertDatabaseConfigured()
+
+  return prisma.project.delete({
+    where: { id: projectId },
+    select: {
+      id: true,
+      name: true,
+    },
+  })
+}
+
 export async function getProjectMessages(projectId: string) {
   assertDatabaseConfigured()
 
