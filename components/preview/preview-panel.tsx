@@ -44,7 +44,7 @@ export function PreviewPanel({
   }
 
   return (
-    <section className="flex min-h-[520px] min-w-0 flex-col overflow-hidden rounded-[2rem] border border-[#D7E3F4] bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(244,248,255,0.98)_100%)] shadow-[0_20px_60px_rgba(37,99,235,0.1)] lg:h-[calc(100svh-6.5rem)]">
+    <section className="flex min-h-[520px] min-w-0 flex-1 w-full flex-col overflow-hidden rounded-[2rem] border border-[#D7E3F4] bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(244,248,255,0.98)_100%)] shadow-[0_20px_60px_rgba(37,99,235,0.1)] lg:h-[calc(100svh-6.5rem)]">
       <div className="flex items-center justify-between border-b border-[#E2E8F0] bg-[#F8FBFF] px-5 py-4 backdrop-blur">
         <div>
           <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-[#2563EB]">
