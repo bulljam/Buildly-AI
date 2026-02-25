@@ -1,12 +1,10 @@
 import Link from "next/link"
 
-import { AppHeader } from "@/components/layout/app-header"
 import { Button } from "@/components/ui/button"
 
 export default function NotFound() {
   return (
     <div className="flex min-h-svh flex-col bg-background">
-      <AppHeader />
       <main className="mx-auto flex w-full max-w-4xl flex-1 items-center px-4 py-10 sm:px-6 lg:px-8">
         <section className="w-full rounded-3xl border border-border/70 bg-card/80 p-8 shadow-sm">
           <p className="text-xs font-medium tracking-[0.24em] text-muted-foreground uppercase">
