@@ -1,27 +1,37 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useEffectEvent, useRef, useState } from "react"
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { PenBox } from "lucide-react"
+import {
+  Folder,
+  House,
+  Layers3,
+  PanelLeftClose,
+  PanelLeftOpen,
+  PenBox,
+  Search,
+} from "lucide-react"
 import { nanoid } from "nanoid"
 
 import { ChatPanel } from "@/components/chat/chat-panel"
 import { PreviewPanel } from "@/components/preview/preview-panel"
 import { ProjectNameDialog } from "@/components/projects/project-name-dialog"
-import { Button } from "@/components/ui/button"
 import {
   appendAssistantMessage,
   canSubmitPrompt,
   createOptimisticUserMessage,
   normalizePrompt,
 } from "@/lib/builder/generate-state"
+import { filterProjectsByQuery } from "@/lib/home/home-projects"
 import type { MessageRecord } from "@/lib/schemas/message"
+import type { ProjectRecord } from "@/types/project"
 
 type ProjectBuilderProps = {
   initialHtml: string
   initialMessages: MessageRecord[]
   initialPrompt?: string
+  projects: ProjectRecord[]
   projectId: string
   projectName: string
 }
@@ -45,20 +55,27 @@ export function ProjectBuilder({
   initialHtml,
   initialMessages,
   initialPrompt = "",
+  projects,
   projectId,
   projectName,
 }: ProjectBuilderProps) {
   const router = useRouter()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [messages, setMessages] = useState(initialMessages)
   const [html, setHtml] = useState(initialHtml)
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [currentProjectName, setCurrentProjectName] = useState(projectName)
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false)
   const [renameError, setRenameError] = useState<string | null>(null)
   const [isRenaming, setIsRenaming] = useState(false)
   const hasAutoSubmittedRef = useRef(false)
+  const filteredProjects = useMemo(
+    () => filterProjectsByQuery(projects, searchQuery).slice(0, 5),
+    [projects, searchQuery]
+  )
 
   async function submitPrompt(rawPrompt: string) {
     if (!canSubmitPrompt(rawPrompt, isLoading)) {
@@ -140,49 +157,130 @@ export function ProjectBuilder({
   }, [initialPrompt])
 
   return (
-    <main className="mx-auto flex w-full max-w-[1680px] flex-1 flex-col bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.1),_transparent_22%),linear-gradient(180deg,_#f8fbff_0%,_#eef4ff_56%,_#f7f5ef_100%)] px-4 py-4 sm:px-6 lg:px-8">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <Button
-          asChild
-          variant="outline"
-          size="sm"
-          className="rounded-full border-[#D7E3F4] bg-white px-4 text-[#0F172A] hover:bg-[#F8FBFF]"
-        >
-          <Link href="/">Back to projects</Link>
-        </Button>
-        <div className="flex items-center gap-2 text-sm text-[#475569]">
-          <div className="max-w-[240px] truncate sm:max-w-[320px]">
-            {currentProjectName}
+    <main className="relative flex min-h-svh overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.1),_transparent_22%),linear-gradient(180deg,_#f8fbff_0%,_#eef4ff_56%,_#f7f5ef_100%)] text-[#0F172A]">
+      <aside
+        className={`absolute inset-y-0 left-0 z-20 w-[360px] p-4 transition-all duration-300 ease-out ${
+          isSidebarOpen
+            ? "translate-x-0 opacity-100"
+            : "-translate-x-[calc(100%+1rem)] opacity-0 pointer-events-none"
+        } lg:z-10`}
+      >
+        <div className="flex h-full flex-col gap-4 rounded-[1.75rem] border border-[#D7E3F4] bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(244,248,255,0.98)_100%)] p-4 shadow-[0_20px_60px_rgba(37,99,235,0.12)] backdrop-blur">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#2563EB] text-white shadow-lg">
+              <Layers3 className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-medium uppercase tracking-[0.24em] text-[#2563EB]">
+                Buildly AI
+              </p>
+              <div className="flex items-center gap-2 text-sm text-[#475569]">
+                <p className="truncate">{currentProjectName}</p>
+                <button
+                  type="button"
+                  aria-label="Rename project"
+                  className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#D7E3F4] bg-white text-[#475569] transition hover:border-[#93C5FD] hover:bg-[#F8FBFF] hover:text-[#0F172A]"
+                  onClick={() => {
+                    setRenameError(null)
+                    setIsRenameDialogOpen(true)
+                  }}
+                >
+                  <PenBox className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
           </div>
+
+          <nav className="space-y-2">
+            <Link
+              href="/"
+              className="flex w-full items-center gap-3 rounded-2xl bg-[#E8F0FF] px-4 py-3 text-left text-sm font-medium text-[#0F172A]"
+            >
+              <House className="h-4 w-4" />
+              Home
+            </Link>
+            <div className="rounded-2xl border border-[#D7E3F4] bg-white px-4 py-3">
+              <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-[#2563EB]">
+                <Search className="h-3.5 w-3.5" />
+                Search projects
+              </div>
+              <input
+                className="w-full bg-transparent text-sm text-[#0F172A] outline-none placeholder:text-[#64748B]"
+                placeholder="Search by project name"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+              />
+            </div>
+            <div className="rounded-2xl border border-[#D7E3F4] bg-white px-4 py-3">
+              <div className="mb-3 flex items-center justify-between text-sm font-medium text-[#0F172A]">
+                <span className="flex items-center gap-3">
+                  <Folder className="h-4 w-4" />
+                  All projects
+                </span>
+                <span className="rounded-full bg-[#DBEAFE] px-2.5 py-1 text-xs text-[#1D4ED8]">
+                  {projects.length}
+                </span>
+              </div>
+              <div className="space-y-1.5">
+                {filteredProjects.map((project) => (
+                  <Link
+                    key={project.id}
+                    href={`/projects/${project.id}`}
+                    className={`block truncate rounded-xl px-3 py-2 text-sm transition ${
+                      project.id === projectId
+                        ? "bg-[#2563EB] text-white"
+                        : "text-[#475569] hover:bg-[#F8FBFF] hover:text-[#0F172A]"
+                    }`}
+                  >
+                    {project.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </nav>
+
+          <div className="min-h-0 flex-1">
+            <ChatPanel
+              error={error}
+              inputValue={inputValue}
+              isLoading={isLoading}
+              messages={messages}
+              onInputChange={setInputValue}
+              onSubmit={submitPrompt}
+              projectName={currentProjectName}
+              compact
+            />
+          </div>
+        </div>
+      </aside>
+
+      <section
+        className={`flex min-w-0 flex-1 flex-col transition-[padding-left] duration-300 ease-out ${
+          isSidebarOpen ? "lg:pl-[376px]" : "lg:pl-0"
+        }`}
+      >
+        <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <button
             type="button"
-            aria-label="Rename project"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#D7E3F4] bg-white text-[#475569] transition hover:border-[#93C5FD] hover:bg-[#F8FBFF] hover:text-[#0F172A]"
-            onClick={() => {
-              setRenameError(null)
-              setIsRenameDialogOpen(true)
-            }}
+            aria-label={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#D7E3F4] bg-white text-[#0F172A] transition hover:bg-[#F8FBFF]"
+            onClick={() => setIsSidebarOpen((current) => !current)}
           >
-            <PenBox className="h-4 w-4" />
+            {isSidebarOpen ? (
+              <PanelLeftClose className="h-4 w-4" />
+            ) : (
+              <PanelLeftOpen className="h-4 w-4" />
+            )}
           </button>
         </div>
-      </div>
 
-      <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[360px_minmax(0,1fr)] xl:grid-cols-[380px_minmax(0,1fr)]">
-        <ChatPanel
-          error={error}
-          inputValue={inputValue}
-          isLoading={isLoading}
-          messages={messages}
-          onInputChange={setInputValue}
-          onSubmit={submitPrompt}
-          projectName={currentProjectName}
-        />
-        <PreviewPanel
-          html={html}
-          isLoading={isLoading}
-          projectName={currentProjectName}
-        />
+        <div className="flex min-h-0 flex-1 px-4 pb-4 sm:px-6 lg:px-8">
+          <PreviewPanel
+            html={html}
+            isLoading={isLoading}
+            projectName={currentProjectName}
+          />
+        </div>
       </section>
 
       <ProjectNameDialog
