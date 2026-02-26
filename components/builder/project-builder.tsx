@@ -10,7 +10,6 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   PenBox,
-  Search,
 } from "lucide-react"
 import { nanoid } from "nanoid"
 
@@ -66,15 +65,14 @@ export function ProjectBuilder({
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [searchQuery, setSearchQuery] = useState("")
   const [currentProjectName, setCurrentProjectName] = useState(projectName)
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false)
   const [renameError, setRenameError] = useState<string | null>(null)
   const [isRenaming, setIsRenaming] = useState(false)
   const hasAutoSubmittedRef = useRef(false)
   const filteredProjects = useMemo(
-    () => filterProjectsByQuery(projects, searchQuery).slice(0, 5),
-    [projects, searchQuery]
+    () => filterProjectsByQuery(projects, "").slice(0, 5),
+    [projects]
   )
 
   async function submitPrompt(rawPrompt: string) {
@@ -159,7 +157,7 @@ export function ProjectBuilder({
   return (
     <main className="relative flex min-h-svh overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.1),_transparent_22%),linear-gradient(180deg,_#f8fbff_0%,_#eef4ff_56%,_#f7f5ef_100%)] text-[#0F172A]">
       <aside
-        className={`absolute inset-y-0 left-0 z-20 w-[360px] p-4 transition-all duration-300 ease-out ${
+        className={`absolute inset-y-0 left-0 z-20 w-[400px] p-4 transition-all duration-300 ease-out ${
           isSidebarOpen
             ? "translate-x-0 opacity-100"
             : "-translate-x-[calc(100%+1rem)] opacity-0 pointer-events-none"
@@ -199,18 +197,6 @@ export function ProjectBuilder({
               <House className="h-4 w-4" />
               Home
             </Link>
-            <div className="rounded-2xl border border-[#D7E3F4] bg-white px-4 py-3">
-              <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-[#2563EB]">
-                <Search className="h-3.5 w-3.5" />
-                Search projects
-              </div>
-              <input
-                className="w-full bg-transparent text-sm text-[#0F172A] outline-none placeholder:text-[#64748B]"
-                placeholder="Search by project name"
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-              />
-            </div>
             <div className="rounded-2xl border border-[#D7E3F4] bg-white px-4 py-3">
               <div className="mb-3 flex items-center justify-between text-sm font-medium text-[#0F172A]">
                 <span className="flex items-center gap-3">
@@ -256,7 +242,7 @@ export function ProjectBuilder({
 
       <section
         className={`flex min-w-0 flex-1 flex-col transition-[padding-left] duration-300 ease-out ${
-          isSidebarOpen ? "lg:pl-[376px]" : "lg:pl-0"
+          isSidebarOpen ? "lg:pl-[416px]" : "lg:pl-0"
         }`}
       >
         <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">

@@ -67,7 +67,9 @@ export function ChatPanel({
   return (
     <section
       className={`flex min-h-[520px] flex-col overflow-hidden rounded-[2rem] border border-[#D7E3F4] bg-[linear-gradient(180deg,_rgba(255,255,255,0.98)_0%,_rgba(244,248,255,0.98)_100%)] shadow-[0_20px_60px_rgba(37,99,235,0.1)] ${
-        compact ? "h-full min-h-0 shadow-none" : "lg:h-[calc(100svh-6.5rem)]"
+        compact
+          ? "scrollbar-none h-full min-h-0 overflow-y-auto shadow-none"
+          : "lg:h-[calc(100svh-6.5rem)]"
       }`}
     >
       <div className="border-b border-[#E2E8F0] bg-[#F8FBFF] px-5 py-4 backdrop-blur">
@@ -81,7 +83,7 @@ export function ChatPanel({
 
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto bg-gradient-to-b from-[#F8FBFF] via-transparent to-transparent px-4 py-4"
+        className="scrollbar-none flex-1 overflow-y-auto bg-gradient-to-b from-[#F8FBFF] via-transparent to-transparent px-4 py-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         <ChatMessageList messages={items} />
       </div>
@@ -106,7 +108,7 @@ export function ChatPanel({
             }}
           >
             <textarea
-              className="min-h-36 w-full resize-none bg-transparent px-4 py-3 text-sm leading-6 text-[#0F172A] outline-none placeholder:text-[#64748B]"
+              className="scrollbar-none min-h-36 w-full resize-none bg-transparent px-4 py-3 text-sm leading-6 text-[#0F172A] outline-none placeholder:text-[#64748B] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               placeholder="Describe the website you want to build..."
               disabled={isLoading}
               value={inputValue}
