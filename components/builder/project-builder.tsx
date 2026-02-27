@@ -3,14 +3,7 @@
 import Link from "next/link"
 import { useEffect, useEffectEvent, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import {
-  Folder,
-  House,
-  Layers3,
-  PanelLeftClose,
-  PanelLeftOpen,
-  PenBox,
-} from "lucide-react"
+import { Folder, House, Layers3, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { nanoid } from "nanoid"
 
 import { ChatPanel } from "@/components/chat/chat-panel"
@@ -179,7 +172,10 @@ export function ProjectBuilder({
               <House className="h-4 w-4" />
               Home
             </Link>
-            <div className="rounded-2xl border border-[#D7E3F4] bg-white px-4 py-3">
+            <Link
+              href="/projects"
+              className="block rounded-2xl border border-[#D7E3F4] bg-white px-4 py-3 transition hover:border-[#93C5FD] hover:bg-[#F8FBFF]"
+            >
               <div className="flex items-center justify-between text-sm font-medium text-[#0F172A]">
                 <span className="flex items-center gap-3">
                   <Folder className="h-4 w-4" />
@@ -189,7 +185,7 @@ export function ProjectBuilder({
                   {projects.length}
                 </span>
               </div>
-            </div>
+            </Link>
           </nav>
 
           <div className="min-h-0 flex-1">
@@ -224,23 +220,17 @@ export function ProjectBuilder({
               <PanelLeftOpen className="h-4 w-4" />
             )}
           </button>
-          <button
-            type="button"
-            aria-label="Rename project"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#D7E3F4] bg-white text-[#475569] transition hover:border-[#93C5FD] hover:bg-[#F8FBFF] hover:text-[#0F172A]"
-            onClick={() => {
-              setRenameError(null)
-              setIsRenameDialogOpen(true)
-            }}
-          >
-            <PenBox className="h-4 w-4" />
-          </button>
+          <div />
         </div>
 
         <div className="flex min-h-0 flex-1 px-4 pb-4 sm:px-6 lg:px-8">
           <PreviewPanel
             html={html}
             isLoading={isLoading}
+            onRename={() => {
+              setRenameError(null)
+              setIsRenameDialogOpen(true)
+            }}
             projectName={currentProjectName}
           />
         </div>

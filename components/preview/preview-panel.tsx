@@ -1,29 +1,33 @@
 "use client"
 
 import { useState } from "react"
-import { BadgeCheck, Clipboard, Loader2 } from "lucide-react"
+import { BadgeCheck, Clipboard, Loader2, PenBox } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { isPreviewMode, type PreviewMode } from "@/lib/builder/preview-state"
 import { DEFAULT_PROJECT_HTML } from "@/lib/db/default-html"
 import { highlightHtml } from "@/lib/preview/highlight-html"
+import { preparePreviewHtml } from "@/lib/preview/prepare-preview-html"
 import { cn } from "@/lib/utils"
 
 type PreviewPanelProps = {
   html?: string
   isLoading?: boolean
+  onRename?: () => void
   projectName?: string
 }
 
 export function PreviewPanel({
   html = DEFAULT_PROJECT_HTML,
   isLoading = false,
+  onRename,
   projectName = "Buildly Project",
 }: PreviewPanelProps) {
   const [mode, setMode] = useState<PreviewMode>("preview")
   const [isCopying, setIsCopying] = useState(false)
   const [hasCopied, setHasCopied] = useState(false)
   const highlightedHtml = highlightHtml(html)
+  const previewHtml = preparePreviewHtml(html)
 
   async function copyHtml() {
     if (typeof window === "undefined" || isCopying) {
@@ -58,9 +62,19 @@ export function PreviewPanel({
           <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-[#2563EB]">
             Preview
           </p>
-          <p className="mt-1 text-base font-semibold tracking-tight text-[#0F172A]">
-            {projectName}
-          </p>
+          <div className="mt-2 flex items-center justify-between gap-3">
+            <p className="truncate text-sm font-medium text-[#0F172A]">
+              {projectName}
+            </p>
+            <button
+              type="button"
+              aria-label="Rename project"
+              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#D7E3F4] bg-white text-[#64748B] transition hover:border-[#93C5FD] hover:text-[#0F172A]"
+              onClick={onRename}
+            >
+              <PenBox className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
         <div className="flex rounded-full border border-[#D7E3F4] bg-white p-1 shadow-[0_8px_24px_rgba(15,23,42,0.06)]">
           {(["preview", "code"] as const).map((value) => (
@@ -90,14 +104,12 @@ export function PreviewPanel({
           <div className="relative h-full min-h-[420px] overflow-hidden rounded-[1.15rem] border border-[#D7E3F4] bg-[#FDFEFF] shadow-[0_10px_30px_rgba(15,23,42,0.08)]">
             <div className="flex items-center justify-between border-b border-[#E2E8F0] bg-[#F5F8FC] px-4 py-2.5">
               {windowDots}
-              <div className="max-w-[52%] truncate text-[11px] font-medium text-[#64748B]">
-                {projectName}
-              </div>
+              <div />
               <div className="w-[46px]" />
             </div>
             <iframe
               title="Buildly preview"
-              srcDoc={html}
+              srcDoc={previewHtml}
               sandbox="allow-scripts allow-same-origin"
               className="block h-[calc(100%-43px)] min-h-[377px] w-full bg-white"
             />
@@ -122,11 +134,6 @@ export function PreviewPanel({
             <div className="flex items-center justify-between gap-3 border-b border-[#E2E8F0] bg-[#F5F8FC] px-4 py-2.5">
               <div className="flex items-center gap-3">
                 {windowDots}
-                <div className="text-xs text-[#64748B]">
-                  {isLoading
-                    ? "Showing the last saved valid HTML snapshot."
-                    : "Current saved HTML"}
-                </div>
               </div>
               <Button
                 type="button"
