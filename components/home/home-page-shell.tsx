@@ -1,23 +1,13 @@
 "use client"
 
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useMemo, useState } from "react"
-import {
-  Folder,
-  House,
-  Layers3,
-  PanelLeftClose,
-  PanelLeftOpen,
-  Search,
-} from "lucide-react"
+import { useState } from "react"
+import { Folder, Layers3, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 
-import { ProjectList } from "@/components/projects/project-list"
 import { Button } from "@/components/ui/button"
 import { canSubmitPrompt, normalizePrompt } from "@/lib/builder/generate-state"
-import {
-  deriveProjectNameFromPrompt,
-  filterProjectsByQuery,
-} from "@/lib/home/home-projects"
+import { deriveProjectNameFromPrompt } from "@/lib/home/home-projects"
 import type { ProjectRecord } from "@/types/project"
 
 type HomePageShellProps = {
@@ -34,14 +24,8 @@ export function HomePageShell({
   const router = useRouter()
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [prompt, setPrompt] = useState("")
-  const [searchQuery, setSearchQuery] = useState("")
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const filteredProjects = useMemo(
-    () => filterProjectsByQuery(projects, searchQuery),
-    [projects, searchQuery]
-  )
 
   async function startProject() {
     if (!canSubmitPrompt(prompt, isSubmitting) || !databaseConfigured) {
@@ -89,7 +73,7 @@ export function HomePageShell({
   return (
     <div className="relative flex min-h-svh overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.12),_transparent_20%),linear-gradient(180deg,_#f8fbff_0%,_#eef4ff_52%,_#f7f5ef_100%)] text-[#0F172A]">
       <aside
-        className={`absolute inset-y-0 left-0 z-20 w-[280px] p-4 transition-all duration-300 ease-out ${
+        className={`absolute inset-y-0 left-0 z-20 w-[440px] p-4 transition-all duration-300 ease-out ${
           isSidebarOpen
             ? "translate-x-0 opacity-100"
             : "-translate-x-[calc(100%+1rem)] opacity-0 pointer-events-none"
@@ -109,27 +93,8 @@ export function HomePageShell({
           </div>
 
           <nav className="space-y-2">
-            <button
-              type="button"
-              className="flex w-full items-center gap-3 rounded-2xl bg-[#E8F0FF] px-4 py-3 text-left text-sm font-medium text-[#0F172A]"
-            >
-              <House className="h-4 w-4" />
-              Home
-            </button>
-            <div className="rounded-2xl border border-[#D7E3F4] bg-white px-4 py-3">
-              <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-[#2563EB]">
-                <Search className="h-3.5 w-3.5" />
-                Search projects
-              </div>
-              <input
-                className="w-full bg-transparent text-sm text-[#0F172A] outline-none placeholder:text-[#64748B]"
-                placeholder="Search by project name"
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-              />
-            </div>
-            <button
-              type="button"
+            <Link
+              href="/projects"
               className="flex w-full items-center justify-between rounded-2xl border border-[#D7E3F4] bg-white px-4 py-3 text-left text-sm font-medium text-[#0F172A] transition hover:border-[#93C5FD] hover:bg-[#F8FBFF]"
             >
               <span className="flex items-center gap-3">
@@ -139,7 +104,7 @@ export function HomePageShell({
               <span className="rounded-full bg-[#DBEAFE] px-2.5 py-1 text-xs text-[#1D4ED8]">
                 {projects.length}
               </span>
-            </button>
+            </Link>
           </nav>
 
           <div className="mt-auto rounded-[1.5rem] border border-dashed border-[#BFDBFE] bg-[#EFF6FF] p-4">
@@ -156,7 +121,7 @@ export function HomePageShell({
 
       <main
         className={`flex min-w-0 flex-1 flex-col transition-[padding-left] duration-300 ease-out ${
-          isSidebarOpen ? "lg:pl-[296px]" : "lg:pl-0"
+          isSidebarOpen ? "lg:pl-[400px]" : "lg:pl-0"
         }`}
       >
         <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -234,26 +199,11 @@ export function HomePageShell({
             </div>
           </section>
 
-          <section className="space-y-4">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <h2 className="text-lg font-semibold tracking-tight text-[#0F172A]">
-                  Recently built projects
-                </h2>
-                <p className="mt-1 text-sm text-[#475569]">
-                  Reopen a direction, search the list, or begin a fresh build.
-                </p>
-              </div>
+          {loadError ? (
+            <div className="rounded-3xl border border-destructive/30 bg-destructive/5 p-5 text-sm text-destructive">
+              {loadError}
             </div>
-
-            {loadError ? (
-              <div className="rounded-3xl border border-destructive/30 bg-destructive/5 p-5 text-sm text-destructive">
-                {loadError}
-              </div>
-            ) : (
-              <ProjectList projects={filteredProjects} />
-            )}
-          </section>
+          ) : null}
         </div>
       </main>
     </div>
