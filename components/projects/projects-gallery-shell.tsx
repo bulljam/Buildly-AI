@@ -12,7 +12,6 @@ import {
 } from "lucide-react"
 
 import { ProjectList } from "@/components/projects/project-list"
-import { Button } from "@/components/ui/button"
 import { filterProjectsByQuery } from "@/lib/home/home-projects"
 import type { ProjectRecord } from "@/types/project"
 
@@ -106,11 +105,10 @@ export function ProjectsGalleryShell({
         }`}
       >
         <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Button
+          <button
             type="button"
-            variant="outline"
-            size="icon"
-            className="rounded-full border-[#D7E3F4] bg-white text-[#0F172A] hover:bg-[#F8FBFF]"
+            aria-label={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#D7E3F4] bg-white text-[#0F172A] transition hover:bg-[#F8FBFF]"
             onClick={() => setIsSidebarOpen((current) => !current)}
           >
             {isSidebarOpen ? (
@@ -118,7 +116,7 @@ export function ProjectsGalleryShell({
             ) : (
               <PanelLeftOpen className="h-4 w-4" />
             )}
-          </Button>
+          </button>
         </div>
 
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pb-8 sm:px-6 lg:px-8">

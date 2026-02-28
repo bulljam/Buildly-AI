@@ -125,11 +125,10 @@ export function HomePageShell({
         }`}
       >
         <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Button
+          <button
             type="button"
-            variant="outline"
-            size="icon"
-            className="rounded-full border-[#D7E3F4] bg-white text-[#0F172A] hover:bg-[#F8FBFF]"
+            aria-label={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#D7E3F4] bg-white text-[#0F172A] transition hover:bg-[#F8FBFF]"
             onClick={() => setIsSidebarOpen((current) => !current)}
           >
             {isSidebarOpen ? (
@@ -137,7 +136,7 @@ export function HomePageShell({
             ) : (
               <PanelLeftOpen className="h-4 w-4" />
             )}
-          </Button>
+          </button>
         </div>
 
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 pb-8 sm:px-6 lg:px-8">
@@ -149,7 +148,7 @@ export function HomePageShell({
                 </div>
                 <div>
                   <p className="text-xs font-medium uppercase tracking-[0.24em] text-[#2563EB]">
-                    Buildly
+                    Buildly AI
                   </p>
                   <h1 className="text-2xl font-semibold tracking-tight text-[#0F172A] sm:text-4xl">
                     Design websites by chatting with your builder.
