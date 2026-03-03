@@ -8,10 +8,13 @@ import type { MessageRole } from "@/lib/schemas/message"
 
 const DEFAULT_PROJECT_NAME = "Untitled Project"
 
-export async function listProjects() {
+export async function listProjects(userId: string) {
   assertDatabaseConfigured()
 
   return prisma.project.findMany({
+    where: {
+      userId,
+    },
     orderBy: {
       updatedAt: "desc",
     },
@@ -25,13 +28,14 @@ export async function listProjects() {
   })
 }
 
-export async function createProject(input?: CreateProjectInput) {
+export async function createProject(userId: string, input?: CreateProjectInput) {
   assertDatabaseConfigured()
 
   const name = input?.name?.trim() || DEFAULT_PROJECT_NAME
 
   return prisma.project.create({
     data: {
+      userId,
       name,
       currentHtml: DEFAULT_PROJECT_HTML,
     },
@@ -45,11 +49,14 @@ export async function createProject(input?: CreateProjectInput) {
   })
 }
 
-export async function getProjectById(projectId: string) {
+export async function getProjectById(userId: string, projectId: string) {
   assertDatabaseConfigured()
 
-  return prisma.project.findUnique({
-    where: { id: projectId },
+  return prisma.project.findFirst({
+    where: {
+      id: projectId,
+      userId,
+    },
     select: {
       id: true,
       name: true,
@@ -61,13 +68,19 @@ export async function getProjectById(projectId: string) {
 }
 
 export async function updateProjectName(
+  userId: string,
   projectId: string,
   input: UpdateProjectInput
 ) {
   assertDatabaseConfigured()
 
   return prisma.project.update({
-    where: { id: projectId },
+    where: {
+      id_userId: {
+        id: projectId,
+        userId,
+      },
+    },
     data: {
       name: input.name,
     },
@@ -81,11 +94,16 @@ export async function updateProjectName(
   })
 }
 
-export async function deleteProject(projectId: string) {
+export async function deleteProject(userId: string, projectId: string) {
   assertDatabaseConfigured()
 
   return prisma.project.delete({
-    where: { id: projectId },
+    where: {
+      id_userId: {
+        id: projectId,
+        userId,
+      },
+    },
     select: {
       id: true,
       name: true,
@@ -93,11 +111,16 @@ export async function deleteProject(projectId: string) {
   })
 }
 
-export async function getProjectMessages(projectId: string) {
+export async function getProjectMessages(userId: string, projectId: string) {
   assertDatabaseConfigured()
 
   return prisma.message.findMany({
-    where: { projectId },
+    where: {
+      projectId,
+      project: {
+        userId,
+      },
+    },
     orderBy: {
       createdAt: "asc",
     },
@@ -111,11 +134,14 @@ export async function getProjectMessages(projectId: string) {
   })
 }
 
-export async function getProjectWithMessages(projectId: string) {
+export async function getProjectWithMessages(userId: string, projectId: string) {
   assertDatabaseConfigured()
 
-  return prisma.project.findUnique({
-    where: { id: projectId },
+  return prisma.project.findFirst({
+    where: {
+      id: projectId,
+      userId,
+    },
     select: {
       id: true,
       name: true,
@@ -163,6 +189,7 @@ export async function createProjectMessage(input: {
 
 export async function saveGeneratedProjectResult(input: {
   projectId: string
+  userId: string
   assistantMessageContent: string
   currentHtml: string
 }) {
@@ -184,7 +211,10 @@ export async function saveGeneratedProjectResult(input: {
     }),
     prisma.project.update({
       where: {
-        id: input.projectId,
+        id_userId: {
+          id: input.projectId,
+          userId: input.userId,
+        },
       },
       data: {
         currentHtml: input.currentHtml,

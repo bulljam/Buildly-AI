@@ -13,13 +13,27 @@ enum MessageRole {
   system
 }
 
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  projects     Project[]
+}
+
 model Project {
   id          String    @id @default(cuid())
+  userId      String
   name        String
   currentHtml String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   messages    Message[]
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, updatedAt])
+  @@unique([id, userId])
 }
 
 model Message {
