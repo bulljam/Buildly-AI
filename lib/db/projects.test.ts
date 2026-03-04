@@ -7,8 +7,8 @@ const { prismaMock } = vi.hoisted(() => ({
     project: {
       create: vi.fn(),
       delete: vi.fn(),
+      findFirst: vi.fn(),
       findMany: vi.fn(),
-      findUnique: vi.fn(),
     },
     message: {
       findMany: vi.fn(),
@@ -38,9 +38,12 @@ describe("project data helpers", () => {
   it("lists projects ordered by most recent update first", async () => {
     prismaMock.project.findMany.mockResolvedValueOnce([])
 
-    await listProjects()
+    await listProjects("user-1")
 
     expect(prismaMock.project.findMany).toHaveBeenCalledWith({
+      where: {
+        userId: "user-1",
+      },
       orderBy: {
         updatedAt: "desc",
       },
@@ -63,10 +66,11 @@ describe("project data helpers", () => {
       updatedAt: new Date(),
     })
 
-    await createProject()
+    await createProject("user-1")
 
     expect(prismaMock.project.create).toHaveBeenCalledWith({
       data: {
+        userId: "user-1",
         name: "Untitled Project",
         currentHtml: DEFAULT_PROJECT_HTML,
       },
@@ -89,10 +93,11 @@ describe("project data helpers", () => {
       updatedAt: new Date(),
     })
 
-    await createProject({ name: "  Agency Site  " })
+    await createProject("user-1", { name: "  Agency Site  " })
 
     expect(prismaMock.project.create).toHaveBeenCalledWith({
       data: {
+        userId: "user-1",
         name: "Agency Site",
         currentHtml: DEFAULT_PROJECT_HTML,
       },
@@ -115,10 +120,11 @@ describe("project data helpers", () => {
       updatedAt: new Date(),
     })
 
-    await createProject({ name: "   " })
+    await createProject("user-1", { name: "   " })
 
     expect(prismaMock.project.create).toHaveBeenCalledWith({
       data: {
+        userId: "user-1",
         name: "Untitled Project",
         currentHtml: DEFAULT_PROJECT_HTML,
       },
@@ -133,12 +139,15 @@ describe("project data helpers", () => {
   })
 
   it("loads a project by id", async () => {
-    prismaMock.project.findUnique.mockResolvedValueOnce(null)
+    prismaMock.project.findFirst.mockResolvedValueOnce(null)
 
-    await getProjectById("project-4")
+    await getProjectById("user-1", "project-4")
 
-    expect(prismaMock.project.findUnique).toHaveBeenCalledWith({
-      where: { id: "project-4" },
+    expect(prismaMock.project.findFirst).toHaveBeenCalledWith({
+      where: {
+        id: "project-4",
+        userId: "user-1",
+      },
       select: {
         id: true,
         name: true,
@@ -155,10 +164,15 @@ describe("project data helpers", () => {
       name: "Portfolio",
     })
 
-    await deleteProject("project-7")
+    await deleteProject("user-1", "project-7")
 
     expect(prismaMock.project.delete).toHaveBeenCalledWith({
-      where: { id: "project-7" },
+      where: {
+        id_userId: {
+          id: "project-7",
+          userId: "user-1",
+        },
+      },
       select: {
         id: true,
         name: true,
@@ -169,10 +183,15 @@ describe("project data helpers", () => {
   it("loads project messages in ascending time order", async () => {
     prismaMock.message.findMany.mockResolvedValueOnce([])
 
-    await getProjectMessages("project-5")
+    await getProjectMessages("user-1", "project-5")
 
     expect(prismaMock.message.findMany).toHaveBeenCalledWith({
-      where: { projectId: "project-5" },
+      where: {
+        projectId: "project-5",
+        project: {
+          userId: "user-1",
+        },
+      },
       orderBy: {
         createdAt: "asc",
       },
@@ -187,12 +206,15 @@ describe("project data helpers", () => {
   })
 
   it("loads a project with its messages", async () => {
-    prismaMock.project.findUnique.mockResolvedValueOnce(null)
+    prismaMock.project.findFirst.mockResolvedValueOnce(null)
 
-    await getProjectWithMessages("project-6")
+    await getProjectWithMessages("user-1", "project-6")
 
-    expect(prismaMock.project.findUnique).toHaveBeenCalledWith({
-      where: { id: "project-6" },
+    expect(prismaMock.project.findFirst).toHaveBeenCalledWith({
+      where: {
+        id: "project-6",
+        userId: "user-1",
+      },
       select: {
         id: true,
         name: true,
