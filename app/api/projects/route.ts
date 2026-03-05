@@ -1,11 +1,19 @@
 import { NextResponse } from "next/server"
 
+import { AUTH_REQUIRED_ERROR } from "@/lib/auth/session"
+import { getCurrentUser } from "@/lib/auth/users"
 import { createProject, listProjects } from "@/lib/db/projects"
 import { createProjectSchema } from "@/lib/schemas/project"
 
 export async function GET() {
   try {
-    const projects = await listProjects()
+    const user = await getCurrentUser()
+
+    if (!user) {
+      return NextResponse.json({ error: AUTH_REQUIRED_ERROR }, { status: 401 })
+    }
+
+    const projects = await listProjects(user.id)
 
     return NextResponse.json({ projects })
   } catch (error) {
@@ -20,6 +28,12 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const user = await getCurrentUser()
+
+    if (!user) {
+      return NextResponse.json({ error: AUTH_REQUIRED_ERROR }, { status: 401 })
+    }
+
     const json = await request.json().catch(() => ({}))
     const result = createProjectSchema.safeParse(json)
 
@@ -32,7 +46,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const project = await createProject(result.data)
+    const project = await createProject(user.id, result.data)
 
     return NextResponse.json({ project }, { status: 201 })
   } catch (error) {
