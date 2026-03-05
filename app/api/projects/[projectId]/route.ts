@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { Prisma } from "@prisma/client"
 
+import { AUTH_REQUIRED_ERROR } from "@/lib/auth/session"
+import { getCurrentUser } from "@/lib/auth/users"
 import {
   deleteProject,
   getProjectById,
@@ -18,7 +20,13 @@ export async function GET(_: Request, context: RouteContext) {
   const { projectId } = await context.params
 
   try {
-    const project = await getProjectById(projectId)
+    const user = await getCurrentUser()
+
+    if (!user) {
+      return NextResponse.json({ error: AUTH_REQUIRED_ERROR }, { status: 401 })
+    }
+
+    const project = await getProjectById(user.id, projectId)
 
     if (!project) {
       return NextResponse.json({ error: "Project not found." }, { status: 404 })
@@ -39,6 +47,12 @@ export async function PATCH(request: Request, context: RouteContext) {
   const { projectId } = await context.params
 
   try {
+    const user = await getCurrentUser()
+
+    if (!user) {
+      return NextResponse.json({ error: AUTH_REQUIRED_ERROR }, { status: 401 })
+    }
+
     const json = await request.json().catch(() => ({}))
     const result = updateProjectSchema.safeParse(json)
 
@@ -51,7 +65,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       )
     }
 
-    const project = await updateProjectName(projectId, result.data)
+    const project = await updateProjectName(user.id, projectId, result.data)
 
     return NextResponse.json({ project })
   } catch (error) {
@@ -75,7 +89,13 @@ export async function DELETE(_: Request, context: RouteContext) {
   const { projectId } = await context.params
 
   try {
-    const project = await deleteProject(projectId)
+    const user = await getCurrentUser()
+
+    if (!user) {
+      return NextResponse.json({ error: AUTH_REQUIRED_ERROR }, { status: 401 })
+    }
+
+    const project = await deleteProject(user.id, projectId)
 
     return NextResponse.json({ project })
   } catch (error) {
