@@ -1,8 +1,11 @@
 import { describe, expect, it, vi } from "vitest"
 
-const { aiMock, dbMock, extractMock } = vi.hoisted(() => ({
+const { aiMock, authMock, dbMock, extractMock } = vi.hoisted(() => ({
   aiMock: {
     generateHtmlWithGroq: vi.fn(),
+  },
+  authMock: {
+    getCurrentUser: vi.fn(),
   },
   dbMock: {
     createProjectMessage: vi.fn(),
@@ -15,6 +18,7 @@ const { aiMock, dbMock, extractMock } = vi.hoisted(() => ({
 }))
 
 vi.mock("@/lib/ai/groq", () => aiMock)
+vi.mock("@/lib/auth/users", () => authMock)
 vi.mock("@/lib/db/projects", () => dbMock)
 vi.mock("@/lib/ai/extract-html", () => extractMock)
 
@@ -23,6 +27,10 @@ import { POST } from "@/app/api/generate/route"
 describe("POST /api/generate", () => {
   it("surfaces the upstream provider error in development", async () => {
     vi.stubEnv("NODE_ENV", "development")
+    authMock.getCurrentUser.mockResolvedValueOnce({
+      id: "user-1",
+      email: "user@example.com",
+    })
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-dev",
       currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
@@ -57,6 +65,10 @@ describe("POST /api/generate", () => {
   })
 
   it("generates html and saves the updated project state", async () => {
+    authMock.getCurrentUser.mockResolvedValueOnce({
+      id: "user-1",
+      email: "user@example.com",
+    })
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-1",
       name: "Landing Page",
@@ -101,6 +113,7 @@ describe("POST /api/generate", () => {
     const body = await response.json()
 
     expect(response.status).toBe(200)
+    expect(dbMock.getProjectById).toHaveBeenCalledWith("user-1", "project-1")
     expect(dbMock.createProjectMessage).toHaveBeenCalledWith({
       projectId: "project-1",
       role: "user",
@@ -112,6 +125,7 @@ describe("POST /api/generate", () => {
     })
     expect(dbMock.saveGeneratedProjectResult).toHaveBeenCalledWith({
       projectId: "project-1",
+      userId: "user-1",
       assistantMessageContent: "Website updated successfully.",
       currentHtml: "<!DOCTYPE html><html><body>New</body></html>",
     })
@@ -132,6 +146,10 @@ describe("POST /api/generate", () => {
   })
 
   it("rejects an empty prompt", async () => {
+    authMock.getCurrentUser.mockResolvedValueOnce({
+      id: "user-1",
+      email: "user@example.com",
+    })
     const request = new Request("http://localhost/api/generate", {
       method: "POST",
       body: JSON.stringify({
@@ -152,7 +170,34 @@ describe("POST /api/generate", () => {
     })
   })
 
+  it("returns 401 when generate is unauthenticated", async () => {
+    authMock.getCurrentUser.mockResolvedValueOnce(null)
+
+    const request = new Request("http://localhost/api/generate", {
+      method: "POST",
+      body: JSON.stringify({
+        projectId: "project-1",
+        prompt: "Build a homepage",
+      }),
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+
+    const response = await POST(request)
+    const body = await response.json()
+
+    expect(response.status).toBe(401)
+    expect(body).toEqual({
+      error: "Authentication required.",
+    })
+  })
+
   it("returns 404 when the project does not exist", async () => {
+    authMock.getCurrentUser.mockResolvedValueOnce({
+      id: "user-1",
+      email: "user@example.com",
+    })
     dbMock.getProjectById.mockResolvedValueOnce(null)
 
     const request = new Request("http://localhost/api/generate", {
@@ -177,6 +222,10 @@ describe("POST /api/generate", () => {
 
   it("returns 502 when the AI response cannot be parsed into a full document", async () => {
     vi.stubEnv("NODE_ENV", "production")
+    authMock.getCurrentUser.mockResolvedValueOnce({
+      id: "user-1",
+      email: "user@example.com",
+    })
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-2",
       currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
@@ -215,6 +264,10 @@ describe("POST /api/generate", () => {
 
   it("includes a raw response preview for malformed html in development", async () => {
     vi.stubEnv("NODE_ENV", "development")
+    authMock.getCurrentUser.mockResolvedValueOnce({
+      id: "user-1",
+      email: "user@example.com",
+    })
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-2-dev",
       currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
@@ -253,6 +306,10 @@ describe("POST /api/generate", () => {
   })
 
   it("returns 502 when the AI returns unchanged HTML", async () => {
+    authMock.getCurrentUser.mockResolvedValueOnce({
+      id: "user-1",
+      email: "user@example.com",
+    })
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-unchanged",
       currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
@@ -290,6 +347,10 @@ describe("POST /api/generate", () => {
   })
 
   it("returns 500 when Groq is not configured", async () => {
+    authMock.getCurrentUser.mockResolvedValueOnce({
+      id: "user-1",
+      email: "user@example.com",
+    })
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-3",
       currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",
@@ -323,6 +384,10 @@ describe("POST /api/generate", () => {
 
   it("keeps the generic error message in production", async () => {
     vi.stubEnv("NODE_ENV", "production")
+    authMock.getCurrentUser.mockResolvedValueOnce({
+      id: "user-1",
+      email: "user@example.com",
+    })
     dbMock.getProjectById.mockResolvedValueOnce({
       id: "project-prod",
       currentHtml: "<!DOCTYPE html><html><body>Old</body></html>",

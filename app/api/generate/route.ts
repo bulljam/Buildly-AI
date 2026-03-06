@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 
 import { extractHtmlDocument } from "@/lib/ai/extract-html"
 import { generateHtmlWithGroq } from "@/lib/ai/groq"
+import { AUTH_REQUIRED_ERROR } from "@/lib/auth/session"
+import { getCurrentUser } from "@/lib/auth/users"
 import {
   createProjectMessage,
   getProjectById,
@@ -24,6 +26,12 @@ export async function POST(request: Request) {
   let rawAiResponse = ""
 
   try {
+    const user = await getCurrentUser()
+
+    if (!user) {
+      return NextResponse.json({ error: AUTH_REQUIRED_ERROR }, { status: 401 })
+    }
+
     const json = await request.json().catch(() => ({}))
     const result = generateRequestSchema.safeParse(json)
 
@@ -36,7 +44,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const project = await getProjectById(result.data.projectId)
+    const project = await getProjectById(user.id, result.data.projectId)
 
     if (!project) {
       return NextResponse.json({ error: "Project not found." }, { status: 404 })
@@ -64,6 +72,7 @@ export async function POST(request: Request) {
 
     const savedResult = await saveGeneratedProjectResult({
       projectId: project.id,
+      userId: user.id,
       assistantMessageContent: ASSISTANT_SUCCESS_MESSAGE,
       currentHtml,
     })
