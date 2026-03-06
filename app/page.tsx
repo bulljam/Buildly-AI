@@ -1,3 +1,6 @@
+import { redirect } from "next/navigation"
+
+import { getCurrentUser } from "@/lib/auth/users"
 import { HomePageShell } from "@/components/home/home-page-shell"
 import { listProjects } from "@/lib/db/projects"
 import { isDatabaseConfigured } from "@/lib/db/prisma"
@@ -10,19 +13,32 @@ import type { ProjectRecord } from "@/types/project"
 export const dynamic = "force-dynamic"
 
 export default async function Page() {
+  const databaseConfigured = isDatabaseConfigured()
   let projects: ProjectRecord[] = []
   let loadError: string | null = null
-  const databaseConfigured = isDatabaseConfigured()
 
   if (!databaseConfigured) {
-    loadError = DATABASE_SETUP_MESSAGE
-  } else {
-    try {
-      projects = await listProjects()
-    } catch (error) {
-      console.error("Failed to load homepage projects", error)
-      loadError = getDatabaseSetupErrorMessage(error)
-    }
+    return (
+      <HomePageShell
+        databaseConfigured={false}
+        loadError={DATABASE_SETUP_MESSAGE}
+        projects={projects}
+        userEmail=""
+      />
+    )
+  }
+
+  const user = await getCurrentUser()
+
+  if (!user) {
+    redirect("/login")
+  }
+
+  try {
+    projects = await listProjects(user.id)
+  } catch (error) {
+    console.error("Failed to load homepage projects", error)
+    loadError = getDatabaseSetupErrorMessage(error)
   }
 
   return (
@@ -30,6 +46,7 @@ export default async function Page() {
       databaseConfigured={databaseConfigured}
       loadError={loadError}
       projects={projects}
+      userEmail={user.email}
     />
   )
 }

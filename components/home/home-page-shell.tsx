@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Folder, Layers3, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 
+import { LogoutButton } from "@/components/auth/logout-button"
 import { Button } from "@/components/ui/button"
 import { canSubmitPrompt, normalizePrompt } from "@/lib/builder/generate-state"
 import { deriveProjectNameFromPrompt } from "@/lib/home/home-projects"
@@ -14,12 +15,14 @@ type HomePageShellProps = {
   databaseConfigured: boolean
   loadError: string | null
   projects: ProjectRecord[]
+  userEmail: string
 }
 
 export function HomePageShell({
   databaseConfigured,
   loadError,
   projects,
+  userEmail,
 }: HomePageShellProps) {
   const router = useRouter()
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -108,6 +111,11 @@ export function HomePageShell({
           </nav>
 
           <div className="mt-auto rounded-[1.5rem] border border-dashed border-[#BFDBFE] bg-[#EFF6FF] p-4">
+            {userEmail ? (
+              <p className="truncate text-xs font-medium uppercase tracking-[0.18em] text-[#2563EB]">
+                {userEmail}
+              </p>
+            ) : null}
             <p className="text-sm font-medium text-[#0F172A]">
               Start from a prompt
             </p>
@@ -115,6 +123,9 @@ export function HomePageShell({
               Create a new concept from the prompt box and keep refining it in
               the workspace.
             </p>
+            {userEmail ? (
+              <LogoutButton className="mt-4 w-full justify-center" />
+            ) : null}
           </div>
         </div>
       </aside>
