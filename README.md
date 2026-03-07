@@ -22,7 +22,7 @@ The app keeps one full HTML document per project, shows a live preview in a sand
 - Persist the latest generated HTML per project
 - Generate updated HTML through `/api/generate`
 - Preview/code toggle
-- Download the current HTML file
+- Email/password authentication
 
 ## Environment Variables
 
@@ -33,6 +33,7 @@ GROQ_API_KEY=
 GROQ_URL="https://api.groq.com/openai/v1/chat/completions"
 GROQ_MODEL="openai/gpt-oss-20b"
 GROQ_MAX_COMPLETION_TOKENS="8192"
+AUTH_SESSION_SECRET="replace-me-with-a-long-random-secret"
 DATABASE_URL="file:./dev.db"
 ```
 
@@ -87,8 +88,9 @@ pnpm exec next build --webpack
 
 ## Database Setup
 
-The app uses two core models:
+The app uses three core models:
 
+- `User`
 - `Project`
 - `Message`
 
