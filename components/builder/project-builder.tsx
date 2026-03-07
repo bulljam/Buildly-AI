@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { Folder, House, Layers3, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { nanoid } from "nanoid"
 
+import { LogoutButton } from "@/components/auth/logout-button"
 import { ChatPanel } from "@/components/chat/chat-panel"
 import { PreviewPanel } from "@/components/preview/preview-panel"
 import { ProjectNameDialog } from "@/components/projects/project-name-dialog"
@@ -25,6 +26,7 @@ type ProjectBuilderProps = {
   projects: ProjectRecord[]
   projectId: string
   projectName: string
+  userEmail: string
 }
 
 type GenerateResponse = {
@@ -49,6 +51,7 @@ export function ProjectBuilder({
   projects,
   projectId,
   projectName,
+  userEmail,
 }: ProjectBuilderProps) {
   const router = useRouter()
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -198,6 +201,22 @@ export function ProjectBuilder({
               onSubmit={submitPrompt}
               compact
             />
+          </div>
+
+          <div className="rounded-[1.5rem] border border-dashed border-[#BFDBFE] bg-[#EFF6FF] p-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                {userEmail ? (
+                  <p className="truncate text-xs font-medium uppercase tracking-[0.18em] text-[#2563EB]">
+                    {userEmail}
+                  </p>
+                ) : null}
+                <p className="mt-2 text-sm leading-6 text-[#475569]">
+                  Keep refining privately, then switch projects whenever you want.
+                </p>
+              </div>
+              <LogoutButton />
+            </div>
           </div>
         </div>
       </aside>

@@ -1,6 +1,7 @@
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 
 import { ProjectBuilder } from "@/components/builder/project-builder"
+import { getCurrentUser } from "@/lib/auth/users"
 import { getProjectWithMessages, listProjects } from "@/lib/db/projects"
 import { isDatabaseConfigured } from "@/lib/db/prisma"
 import { DATABASE_SETUP_MESSAGE } from "@/lib/db/setup-status"
@@ -35,8 +36,14 @@ export default async function ProjectPage({
     )
   }
 
-  const project = await getProjectWithMessages(projectId)
-  const projects = await listProjects()
+  const user = await getCurrentUser()
+
+  if (!user) {
+    redirect("/login")
+  }
+
+  const project = await getProjectWithMessages(user.id, projectId)
+  const projects = await listProjects(user.id)
 
   if (!project) {
     notFound()
@@ -51,6 +58,7 @@ export default async function ProjectPage({
         projects={projects}
         projectId={project.id}
         projectName={project.name}
+        userEmail={user.email}
       />
     </div>
   )
