@@ -21,12 +21,15 @@ describe("POST /api/auth/signup", () => {
     usersMock.createUser.mockResolvedValueOnce({
       id: "user-1",
       email: "user@example.com",
+      name: "Jane Doe",
     })
 
     const response = await POST(
       new Request("http://localhost/api/auth/signup", {
         method: "POST",
         body: JSON.stringify({
+          fullName: "Jane Doe",
+          confirmPassword: "supersecret",
           email: "user@example.com",
           password: "supersecret",
         }),
@@ -39,6 +42,7 @@ describe("POST /api/auth/signup", () => {
 
     expect(response.status).toBe(201)
     expect(usersMock.createUser).toHaveBeenCalledWith({
+      fullName: "Jane Doe",
       email: "user@example.com",
       password: "supersecret",
     })
@@ -47,6 +51,7 @@ describe("POST /api/auth/signup", () => {
       user: {
         id: "user-1",
         email: "user@example.com",
+        name: "Jane Doe",
       },
     })
   })
@@ -56,6 +61,8 @@ describe("POST /api/auth/signup", () => {
       new Request("http://localhost/api/auth/signup", {
         method: "POST",
         body: JSON.stringify({
+          fullName: "J",
+          confirmPassword: "short",
           email: "not-an-email",
           password: "short",
         }),
@@ -81,6 +88,8 @@ describe("POST /api/auth/signup", () => {
       new Request("http://localhost/api/auth/signup", {
         method: "POST",
         body: JSON.stringify({
+          fullName: "Jane Doe",
+          confirmPassword: "supersecret",
           email: "user@example.com",
           password: "supersecret",
         }),
@@ -94,6 +103,29 @@ describe("POST /api/auth/signup", () => {
     expect(response.status).toBe(409)
     expect(body).toEqual({
       error: "An account with this email already exists.",
+    })
+  })
+
+  it("rejects password confirmation mismatches", async () => {
+    const response = await POST(
+      new Request("http://localhost/api/auth/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          fullName: "Jane Doe",
+          confirmPassword: "different-password",
+          email: "user@example.com",
+          password: "supersecret",
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+    )
+    const body = await response.json()
+
+    expect(response.status).toBe(400)
+    expect(body).toEqual({
+      error: "Passwords do not match.",
     })
   })
 })

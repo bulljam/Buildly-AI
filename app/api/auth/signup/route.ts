@@ -2,12 +2,12 @@ import { NextResponse } from "next/server"
 
 import { applySessionCookie, SESSION_SECRET_MISSING_ERROR } from "@/lib/auth/session"
 import { AUTH_DUPLICATE_EMAIL_ERROR, createUser } from "@/lib/auth/users"
-import { authCredentialsSchema } from "@/lib/schemas/auth"
+import { signupCredentialsSchema } from "@/lib/schemas/auth"
 
 export async function POST(request: Request) {
   try {
     const json = await request.json().catch(() => ({}))
-    const result = authCredentialsSchema.safeParse(json)
+    const result = signupCredentialsSchema.safeParse(json)
 
     if (!result.success) {
       return NextResponse.json(
@@ -19,7 +19,11 @@ export async function POST(request: Request) {
       )
     }
 
-    const user = await createUser(result.data)
+    const user = await createUser({
+      email: result.data.email,
+      fullName: result.data.fullName,
+      password: result.data.password,
+    })
     const response = NextResponse.json({ user }, { status: 201 })
 
     applySessionCookie(response, user.id)
