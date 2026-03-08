@@ -11,24 +11,31 @@ export const AUTH_DUPLICATE_EMAIL_ERROR =
 type AuthUserRecord = {
   email: string
   id: string
+  name: string
 }
 
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase()
 }
 
-export async function createUser(input: { email: string; password: string }) {
+export async function createUser(input: {
+  email: string
+  fullName: string
+  password: string
+}) {
   assertDatabaseConfigured()
 
   try {
     return await prisma.user.create({
       data: {
         email: normalizeEmail(input.email),
+        name: input.fullName.trim(),
         passwordHash: await hashPassword(input.password),
       },
       select: {
         id: true,
         email: true,
+        name: true,
       },
     })
   } catch (error) {
@@ -56,6 +63,7 @@ export async function authenticateUser(input: {
     select: {
       id: true,
       email: true,
+      name: true,
       passwordHash: true,
     },
   })
@@ -73,6 +81,7 @@ export async function authenticateUser(input: {
   return {
     id: user.id,
     email: user.email,
+    name: user.name,
   }
 }
 
@@ -92,6 +101,7 @@ export async function getCurrentUser() {
     select: {
       id: true,
       email: true,
+      name: true,
     },
   })
 }
