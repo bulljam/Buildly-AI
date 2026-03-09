@@ -20,6 +20,7 @@ describe("POST /api/auth/login", () => {
     usersMock.authenticateUser.mockResolvedValueOnce({
       id: "user-1",
       email: "user@example.com",
+      name: "Jane Doe",
     })
 
     const response = await POST(
@@ -46,6 +47,7 @@ describe("POST /api/auth/login", () => {
       user: {
         id: "user-1",
         email: "user@example.com",
+        name: "Jane Doe",
       },
     })
   })
