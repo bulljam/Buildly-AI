@@ -58,7 +58,7 @@ export default async function ProjectPage({
         projects={projects}
         projectId={project.id}
         projectName={project.name}
-        userEmail={user.email}
+        userName={user.name}
       />
     </div>
   )
