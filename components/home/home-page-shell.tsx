@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Folder, Layers3, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 
-import { LogoutButton } from "@/components/auth/logout-button"
+import { UserSidebarMenu } from "@/components/auth/user-sidebar-menu"
 import { Button } from "@/components/ui/button"
 import { canSubmitPrompt, normalizePrompt } from "@/lib/builder/generate-state"
 import { deriveProjectNameFromPrompt } from "@/lib/home/home-projects"
@@ -15,14 +15,14 @@ type HomePageShellProps = {
   databaseConfigured: boolean
   loadError: string | null
   projects: ProjectRecord[]
-  userEmail: string
+  userName: string
 }
 
 export function HomePageShell({
   databaseConfigured,
   loadError,
   projects,
-  userEmail,
+  userName,
 }: HomePageShellProps) {
   const router = useRouter()
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -110,23 +110,11 @@ export function HomePageShell({
             </Link>
           </nav>
 
-          <div className="mt-auto rounded-[1.5rem] border border-dashed border-[#BFDBFE] bg-[#EFF6FF] p-4">
-            {userEmail ? (
-              <p className="truncate text-xs font-medium uppercase tracking-[0.18em] text-[#2563EB]">
-                {userEmail}
-              </p>
-            ) : null}
-            <p className="text-sm font-medium text-[#0F172A]">
-              Start from a prompt
-            </p>
-            <p className="mt-2 text-sm leading-6 text-[#475569]">
-              Create a new concept from the prompt box and keep refining it in
-              the workspace.
-            </p>
-            {userEmail ? (
-              <LogoutButton className="mt-4 w-full justify-center" />
-            ) : null}
-          </div>
+          {userName ? (
+            <div className="mt-auto">
+              <UserSidebarMenu userName={userName} />
+            </div>
+          ) : null}
         </div>
       </aside>
 

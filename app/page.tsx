@@ -23,7 +23,7 @@ export default async function Page() {
         databaseConfigured={false}
         loadError={DATABASE_SETUP_MESSAGE}
         projects={projects}
-        userEmail=""
+        userName=""
       />
     )
   }
@@ -46,7 +46,7 @@ export default async function Page() {
       databaseConfigured={databaseConfigured}
       loadError={loadError}
       projects={projects}
-      userEmail={user.email}
+      userName={user.name}
     />
   )
 }
