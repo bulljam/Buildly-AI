@@ -11,7 +11,7 @@ import {
   Search,
 } from "lucide-react"
 
-import { LogoutButton } from "@/components/auth/logout-button"
+import { UserSidebarMenu } from "@/components/auth/user-sidebar-menu"
 import { ProjectList } from "@/components/projects/project-list"
 import { filterProjectsByQuery } from "@/lib/home/home-projects"
 import type { ProjectRecord } from "@/types/project"
@@ -19,13 +19,13 @@ import type { ProjectRecord } from "@/types/project"
 type ProjectsGalleryShellProps = {
   loadError: string | null
   projects: ProjectRecord[]
-  userEmail: string
+  userName: string
 }
 
 export function ProjectsGalleryShell({
   loadError,
   projects,
-  userEmail,
+  userName,
 }: ProjectsGalleryShellProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -91,22 +91,11 @@ export function ProjectsGalleryShell({
             </Link>
           </nav>
 
-          <div className="mt-auto rounded-[1.5rem] border border-dashed border-[#BFDBFE] bg-[#EFF6FF] p-4">
-            {userEmail ? (
-              <p className="truncate text-xs font-medium uppercase tracking-[0.18em] text-[#2563EB]">
-                {userEmail}
-              </p>
-            ) : null}
-            <p className="text-sm font-medium text-[#0F172A]">
-              Browse your builds
-            </p>
-            <p className="mt-2 text-sm leading-6 text-[#475569]">
-              Reopen a direction, compare generated websites, and continue refining any project.
-            </p>
-            {userEmail ? (
-              <LogoutButton className="mt-4 w-full justify-center" />
-            ) : null}
-          </div>
+          {userName ? (
+            <div className="mt-auto">
+              <UserSidebarMenu userName={userName} />
+            </div>
+          ) : null}
         </div>
       </aside>
 

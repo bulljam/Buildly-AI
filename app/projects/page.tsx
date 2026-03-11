@@ -22,7 +22,7 @@ export default async function ProjectsPage() {
       <ProjectsGalleryShell
         loadError={DATABASE_SETUP_MESSAGE}
         projects={projects}
-        userEmail=""
+        userName=""
       />
     )
   }
@@ -44,7 +44,7 @@ export default async function ProjectsPage() {
     <ProjectsGalleryShell
       loadError={loadError}
       projects={projects}
-      userEmail={user.email}
+      userName={user.name}
     />
   )
 }
