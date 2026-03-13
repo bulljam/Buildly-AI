@@ -23,6 +23,7 @@ export default async function Page() {
         databaseConfigured={false}
         loadError={DATABASE_SETUP_MESSAGE}
         projects={projects}
+        userAvatarDataUrl={null}
         userName=""
       />
     )
@@ -46,6 +47,7 @@ export default async function Page() {
       databaseConfigured={databaseConfigured}
       loadError={loadError}
       projects={projects}
+      userAvatarDataUrl={user.avatarDataUrl}
       userName={user.name}
     />
   )

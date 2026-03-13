@@ -15,6 +15,7 @@ type HomePageShellProps = {
   databaseConfigured: boolean
   loadError: string | null
   projects: ProjectRecord[]
+  userAvatarDataUrl?: string | null
   userName: string
 }
 
@@ -22,6 +23,7 @@ export function HomePageShell({
   databaseConfigured,
   loadError,
   projects,
+  userAvatarDataUrl,
   userName,
 }: HomePageShellProps) {
   const router = useRouter()
@@ -112,7 +114,10 @@ export function HomePageShell({
 
           {userName ? (
             <div className="mt-auto">
-              <UserSidebarMenu userName={userName} />
+              <UserSidebarMenu
+                userAvatarDataUrl={userAvatarDataUrl}
+                userName={userName}
+              />
             </div>
           ) : null}
         </div>

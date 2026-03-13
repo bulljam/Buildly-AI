@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
@@ -8,10 +9,14 @@ import { EllipsisVertical, LogOut, UserRound } from "lucide-react"
 import { getUserInitials } from "@/lib/auth/user-display"
 
 type UserSidebarMenuProps = {
+  userAvatarDataUrl?: string | null
   userName: string
 }
 
-export function UserSidebarMenu({ userName }: UserSidebarMenuProps) {
+export function UserSidebarMenu({
+  userAvatarDataUrl = null,
+  userName,
+}: UserSidebarMenuProps) {
   const router = useRouter()
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -55,8 +60,19 @@ export function UserSidebarMenu({ userName }: UserSidebarMenuProps) {
       ref={containerRef}
       className="relative flex items-center gap-3 rounded-[1.5rem] border border-[#D7E3F4] bg-white/90 p-3 shadow-[0_10px_30px_rgba(37,99,235,0.08)]"
     >
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#2563EB] text-sm font-semibold tracking-[0.18em] text-white">
-        {getUserInitials(userName) || "U"}
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#2563EB] text-sm font-semibold tracking-[0.18em] text-white">
+        {userAvatarDataUrl ? (
+          <Image
+            alt={userName}
+            className="h-full w-full object-cover"
+            height={44}
+            src={userAvatarDataUrl}
+            unoptimized
+            width={44}
+          />
+        ) : (
+          getUserInitials(userName) || "U"
+        )}
       </div>
 
       <div className="min-w-0 flex-1">
