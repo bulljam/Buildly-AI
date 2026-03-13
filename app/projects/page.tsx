@@ -22,6 +22,7 @@ export default async function ProjectsPage() {
       <ProjectsGalleryShell
         loadError={DATABASE_SETUP_MESSAGE}
         projects={projects}
+        userAvatarDataUrl={null}
         userName=""
       />
     )
@@ -44,6 +45,7 @@ export default async function ProjectsPage() {
     <ProjectsGalleryShell
       loadError={loadError}
       projects={projects}
+      userAvatarDataUrl={user.avatarDataUrl}
       userName={user.name}
     />
   )

@@ -19,12 +19,14 @@ import type { ProjectRecord } from "@/types/project"
 type ProjectsGalleryShellProps = {
   loadError: string | null
   projects: ProjectRecord[]
+  userAvatarDataUrl?: string | null
   userName: string
 }
 
 export function ProjectsGalleryShell({
   loadError,
   projects,
+  userAvatarDataUrl,
   userName,
 }: ProjectsGalleryShellProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -93,7 +95,10 @@ export function ProjectsGalleryShell({
 
           {userName ? (
             <div className="mt-auto">
-              <UserSidebarMenu userName={userName} />
+              <UserSidebarMenu
+                userAvatarDataUrl={userAvatarDataUrl}
+                userName={userName}
+              />
             </div>
           ) : null}
         </div>
