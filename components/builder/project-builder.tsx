@@ -26,6 +26,7 @@ type ProjectBuilderProps = {
   projects: ProjectRecord[]
   projectId: string
   projectName: string
+  userAvatarDataUrl?: string | null
   userName: string
 }
 
@@ -51,6 +52,7 @@ export function ProjectBuilder({
   projects,
   projectId,
   projectName,
+  userAvatarDataUrl,
   userName,
 }: ProjectBuilderProps) {
   const router = useRouter()
@@ -203,7 +205,12 @@ export function ProjectBuilder({
             />
           </div>
 
-          {userName ? <UserSidebarMenu userName={userName} /> : null}
+          {userName ? (
+            <UserSidebarMenu
+              userAvatarDataUrl={userAvatarDataUrl}
+              userName={userName}
+            />
+          ) : null}
         </div>
       </aside>
 
