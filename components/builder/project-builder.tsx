@@ -150,7 +150,7 @@ export function ProjectBuilder({
   return (
     <main className="relative flex min-h-svh overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.1),_transparent_22%),linear-gradient(180deg,_#f8fbff_0%,_#eef4ff_56%,_#f7f5ef_100%)] text-[#0F172A]">
       <aside
-        className={`absolute inset-y-0 left-0 z-20 w-[440px] p-4 transition-all duration-300 ease-out ${
+        className={`absolute inset-y-0 left-0 z-20 w-[400px] p-4 transition-all duration-300 ease-out ${
           isSidebarOpen
             ? "translate-x-0 opacity-100"
             : "-translate-x-[calc(100%+1rem)] opacity-0 pointer-events-none"
@@ -216,7 +216,7 @@ export function ProjectBuilder({
 
       <section
         className={`flex min-w-0 flex-1 flex-col transition-[padding-left] duration-300 ease-out ${
-          isSidebarOpen ? "lg:pl-[400px]" : "lg:pl-0"
+          isSidebarOpen ? "lg:pl-[368px]" : "lg:pl-0"
         }`}
       >
         <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
