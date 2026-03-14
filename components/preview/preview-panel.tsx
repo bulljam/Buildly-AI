@@ -130,7 +130,7 @@ export function PreviewPanel({
             ) : null}
           </div>
         ) : (
-          <div className="min-h-[420px] overflow-hidden rounded-[1.15rem] border border-[#D7E3F4] bg-[#F8FBFF] shadow-[0_10px_30px_rgba(15,23,42,0.08)]">
+          <div className="flex h-full min-h-[420px] flex-col overflow-hidden rounded-[1.15rem] border border-[#D7E3F4] bg-[#F8FBFF] shadow-[0_10px_30px_rgba(15,23,42,0.08)]">
             <div className="flex items-center justify-between gap-3 border-b border-[#E2E8F0] bg-[#F5F8FC] px-4 py-2.5">
               <div className="flex items-center gap-3">
                 {windowDots}
@@ -156,7 +156,7 @@ export function PreviewPanel({
                 )}
               </Button>
             </div>
-            <pre className="h-[calc(100%-45px)] min-h-[375px] overflow-auto bg-[#F8FBFF] p-4 text-xs leading-6 text-[#0F172A]">
+            <pre className="min-h-0 flex-1 overflow-auto bg-[#F8FBFF] p-4 text-xs leading-6 text-[#0F172A]">
               <code
                 dangerouslySetInnerHTML={{
                   __html: highlightedHtml,
