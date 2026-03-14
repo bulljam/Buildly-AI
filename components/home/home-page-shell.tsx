@@ -19,6 +19,12 @@ type HomePageShellProps = {
   userName: string
 }
 
+const STARTER_PROMPTS = [
+  "Build a modern SaaS landing page for an AI writing assistant.",
+  "Create a bold coffee shop website with a strong hero and menu section.",
+  "Design a clean portfolio for a product designer with case studies.",
+]
+
 export function HomePageShell({
   databaseConfigured,
   loadError,
@@ -78,7 +84,7 @@ export function HomePageShell({
   return (
     <div className="relative flex min-h-svh overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.12),_transparent_20%),linear-gradient(180deg,_#f8fbff_0%,_#eef4ff_52%,_#f7f5ef_100%)] text-[#0F172A]">
       <aside
-        className={`absolute inset-y-0 left-0 z-20 w-[440px] p-4 transition-all duration-300 ease-out ${
+        className={`absolute inset-y-0 left-0 z-20 w-[400px] p-4 transition-all duration-300 ease-out ${
           isSidebarOpen
             ? "translate-x-0 opacity-100"
             : "-translate-x-[calc(100%+1rem)] opacity-0 pointer-events-none"
@@ -125,7 +131,7 @@ export function HomePageShell({
 
       <main
         className={`flex min-w-0 flex-1 flex-col transition-[padding-left] duration-300 ease-out ${
-          isSidebarOpen ? "lg:pl-[400px]" : "lg:pl-0"
+          isSidebarOpen ? "lg:pl-[368px]" : "lg:pl-0"
         }`}
       >
         <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -165,10 +171,29 @@ export function HomePageShell({
                 iterate from there with a live visual workspace.
               </p>
 
-              <div className="mt-6 rounded-[1.75rem] border border-[#D7E3F4] bg-white p-3 shadow-sm">
+              <div className="mt-10 space-y-4">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-[0.22em] text-[#2563EB]">
+                    Starter prompts
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    {STARTER_PROMPTS.map((starterPrompt) => (
+                      <button
+                        key={starterPrompt}
+                        type="button"
+                        className="rounded-full border border-[#D7E3F4] bg-white px-4 py-2.5 text-left text-sm text-[#0F172A] transition hover:border-[#93C5FD] hover:bg-[#F8FBFF]"
+                        onClick={() => setPrompt(starterPrompt)}
+                      >
+                        {starterPrompt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-[1.75rem] border border-[#D7E3F4] bg-white p-3 shadow-sm">
                 <div className="flex flex-col gap-3">
                   <textarea
-                    className="min-h-32 w-full resize-none bg-transparent px-3 py-3 text-sm leading-7 text-[#0F172A] outline-none placeholder:text-[#64748B]"
+                    className="min-h-24 w-full resize-none bg-transparent px-3 py-3 text-sm leading-7 text-[#0F172A] outline-none placeholder:text-[#64748B]"
                     placeholder="Ask for a homepage, a travel brand, a coffee shop landing page, a modern SaaS site..."
                     disabled={!databaseConfigured || isSubmitting}
                     value={prompt}
@@ -192,6 +217,7 @@ export function HomePageShell({
                     </Button>
                   </div>
                 </div>
+              </div>
               </div>
 
               {submitError ? (
