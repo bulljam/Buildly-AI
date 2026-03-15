@@ -113,7 +113,11 @@ export function ProjectNameDialog({
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button
+            type="submit"
+            className="bg-[#2563EB] text-white hover:bg-[#1D4ED8] hover:text-white"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Saving..." : confirmLabel}
           </Button>
         </div>
