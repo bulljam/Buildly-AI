@@ -2,7 +2,13 @@
 
 Buildly AI is a focused MVP for generating and refining a website through chat.
 
-The app keeps one full HTML document per project, shows a live preview in a sandboxed iframe, stores project chat history, and lets you download the current HTML snapshot.
+The app keeps one full HTML document per project, shows a live preview in a sandboxed iframe, stores project chat history, and lets you inspect the generated HTML in a built-in code view.
+
+## Model Quality
+
+Buildly AI is a BYOK (bring your own key) application. Generation quality, accuracy, and design sophistication depend heavily on the model you configure.
+
+The app will work with lower-cost or free models, but those options often produce more limited, generic, or inconsistent results. For stronger output quality and more reliable edits, a premium model is recommended.
 
 ## Stack
 
@@ -17,12 +23,14 @@ The app keeps one full HTML document per project, shows a live preview in a sand
 
 ## What Works
 
-- Create and load projects
+- Create, rename, and delete projects
+- Browse projects from a dedicated projects page
 - Persist project chat history
 - Persist the latest generated HTML per project
 - Generate updated HTML through `/api/generate`
 - Preview/code toggle
 - Email/password authentication
+- Editable profile settings for name, email, password, and avatar
 
 ## Environment Variables
 
@@ -31,11 +39,13 @@ Create a local `.env` file with:
 ```env
 GROQ_API_KEY=
 GROQ_URL="https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL="openai/gpt-oss-20b"
+GROQ_MODEL=
 GROQ_MAX_COMPLETION_TOKENS="8192"
-AUTH_SESSION_SECRET="replace-me-with-a-long-random-secret"
+AUTH_SESSION_SECRET="replace-with-a-long-random-secret"
 DATABASE_URL="file:./dev.db"
 ```
+
+Set `GROQ_MODEL` to the Groq model you want to use. Because this is a BYOK app, the model you choose has a direct impact on output quality.
 
 ## Getting Started
 
@@ -56,6 +66,14 @@ Create the local SQLite database from the schema:
 ```bash
 pnpm exec prisma db push
 ```
+
+If your local database is behind the current schema and `db push` refuses to apply required changes, you can reset the local SQLite database with:
+
+```bash
+pnpm exec prisma db push --force-reset
+```
+
+This is appropriate for local development only and will delete existing local data.
 
 Start the dev server:
 
@@ -130,18 +148,10 @@ pnpm test
 Current coverage includes:
 
 - project schema validation
+- auth and profile validation
 - database helper behavior
 - project API routes
 - generate API behavior
 - HTML extraction
 - chat UX helpers
-- preview/download helpers
-
-## MVP Limitations
-
-- One HTML document per project
-- No auth
-- No project version history
-- No streaming responses
-- No multi-user collaboration
-- No custom deployment flow
+- preview helpers
