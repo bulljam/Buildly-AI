@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Camera } from "lucide-react"
+import { Camera, X } from "lucide-react"
 
 import { getUserInitials } from "@/lib/auth/user-display"
 
@@ -164,6 +164,20 @@ export function ProfileSettingsForm({
           <p className="mt-2 text-sm leading-6 text-[#475569]">
             Update how your name, login details, and picture appear across Buildly.
           </p>
+          {avatarDataUrl ? (
+            <button
+              type="button"
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#FBCFE8] bg-[#FDF2F8] px-4 py-2 text-sm font-medium text-[#BE185D] transition hover:bg-[#FCE7F3]"
+              onClick={() => {
+                setAvatarDataUrl(null)
+                setError(null)
+                setSuccess(null)
+              }}
+            >
+              <X className="h-4 w-4" />
+              Remove photo
+            </button>
+          ) : null}
         </div>
       </div>
 
