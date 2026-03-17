@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { BadgeCheck, Clipboard, Loader2, PenBox } from "lucide-react"
+import { BadgeCheck, Clipboard, Download, Loader2, PenBox } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { isPreviewMode, type PreviewMode } from "@/lib/builder/preview-state"
 import { DEFAULT_PROJECT_HTML } from "@/lib/db/default-html"
 import { highlightHtml } from "@/lib/preview/highlight-html"
 import { preparePreviewHtml } from "@/lib/preview/prepare-preview-html"
+import { downloadProjectHtml } from "@/lib/utils/download-html"
 import { cn } from "@/lib/utils"
 
 type PreviewPanelProps = {
@@ -76,26 +77,38 @@ export function PreviewPanel({
             </button>
           </div>
         </div>
-        <div className="flex rounded-full border border-[#D7E3F4] bg-white p-1 shadow-[0_8px_24px_rgba(15,23,42,0.06)]">
-          {(["preview", "code"] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => {
-                if (isPreviewMode(value)) {
-                  setMode(value)
-                }
-              }}
-              className={cn(
-                "rounded-full px-3 py-1 text-xs capitalize transition",
-                mode === value
-                  ? "bg-[#2563EB] text-white"
-                  : "text-[#64748B] hover:text-[#0F172A]"
-              )}
-            >
-              {value}
-            </button>
-          ))}
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="h-8 border-[#D7E3F4] bg-white text-[#0F172A] hover:bg-[#F8FBFF] hover:text-[#0F172A]"
+            onClick={() => downloadProjectHtml(projectName, html)}
+          >
+            <Download className="h-4 w-4" />
+            Download
+          </Button>
+          <div className="flex rounded-full border border-[#D7E3F4] bg-white p-1 shadow-[0_8px_24px_rgba(15,23,42,0.06)]">
+            {(["preview", "code"] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => {
+                  if (isPreviewMode(value)) {
+                    setMode(value)
+                  }
+                }}
+                className={cn(
+                  "rounded-full px-3 py-1 text-xs capitalize transition",
+                  mode === value
+                    ? "bg-[#2563EB] text-white"
+                    : "text-[#64748B] hover:text-[#0F172A]"
+                )}
+              >
+                {value}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
