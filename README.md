@@ -37,9 +37,9 @@ The app will work with lower-cost or free models, but those options often produc
 Create a local `.env` file with:
 
 ```env
-GROQ_API_KEY=
+GROQ_API_KEY="replace-with-your-own-api-key"
 GROQ_URL="https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL=
+GROQ_MODEL="replace-with-your-chosen-model"
 GROQ_MAX_COMPLETION_TOKENS="8192"
 AUTH_SESSION_SECRET="replace-with-a-long-random-secret"
 DATABASE_URL="file:./dev.db"
