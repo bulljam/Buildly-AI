@@ -4,6 +4,14 @@ Buildly AI is a focused MVP for generating and refining a website through chat.
 
 The app keeps one full HTML document per project, shows a live preview in a sandboxed iframe, stores project chat history, and lets you inspect the generated HTML in a built-in code view.
 
+## Project Demo
+
+<p>Click the preview below to watch the demo. Use Ctrl + Click or open in a new tab if needed.</p>
+
+<a href="https://youtu.be/PfC5VynaZ1A">
+  <img src="https://img.youtube.com/vi/PfC5VynaZ1A/maxresdefault.jpg" alt="Project Demo" width="100%" />
+</a>
+
 ## Model Quality
 
 Buildly AI is a BYOK (bring your own key) application. Generation quality, accuracy, and design sophistication depend heavily on the model you configure.
