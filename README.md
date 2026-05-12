@@ -1,8 +1,6 @@
 # Buildly AI
 
-Buildly AI is a focused MVP for generating and refining a website through chat.
-
-The app keeps one full HTML document per project, shows a live preview in a sandboxed iframe, stores project chat history, and lets you inspect the generated HTML in a built-in code view.
+An AI-powered website builder where users can create projects, chat to generate or refine websites, and preview the results live.
 
 ## Project Demo
 
